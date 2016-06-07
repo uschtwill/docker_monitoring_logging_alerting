@@ -1233,7 +1233,7 @@
 
 ### node_network
 
-#### node_receive
+#### node_network_receive
 
 **node_network_receive_bytes**  
 -Description: Network device statistic receive_bytes.  
@@ -1267,7 +1267,7 @@
 -Description: Network device statistic receive_packets.  
 -Type: gauge  
 
-#### node_transmit
+#### node_network_transmit
 
 **node_network_transmit_bytes**  
 -Description: Network device statistic transmit_bytes.  

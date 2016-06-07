@@ -9,7 +9,7 @@
 -Description: Number of goroutines that currently exist.  
 -Type: go_goroutines gauge  
 
-### http_request
+### http
 
 **http_request_duration_microseconds**  
 -Description: The HTTP request latencies in microseconds.  

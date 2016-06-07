@@ -1,12 +1,3 @@
-
-### cadvisor
-
-**cadvisor_version_info**  
--Description: A metric with a constant '1' value labeled by kernel version, OS version, docker version, cadvisor version & cadvisor revision.  
--Type: gauge  
-
-### container
-
 #### container_cpu
 
 **container_cpu_system_seconds_total**  
@@ -153,7 +144,7 @@
 -Description: Memory swap limit for the container.  
 -Type: gauge  
 
-#### ontainer_misc
+#### container_misc
 
 **container_last_seen**  
 -Description: Last time a container was seen by the exporter  
@@ -329,4 +320,10 @@
 
 **process_virtual_memory_bytes**  
 -Description: Virtual memory size in bytes.  
+-Type: gauge  
+
+### misc
+
+**cadvisor_version_info**  
+-Description: A metric with a constant '1' value labeled by kernel version, OS version, docker version, cadvisor version & cadvisor revision.  
 -Type: gauge  
