@@ -15,12 +15,19 @@ WARNING: This configuration is for testing purposes only. As it is simply forwar
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging.git`
 2. `cd` into the folder: `cd docker_monitoring_logging`
-3. Run the setup script: `sh run.sh`
-4. Go to [localhost:3000](localhost:3000) and log in with user:admin, pass:admin.
+3. Run the setup script: `sh setup.sh`
+4. Go to [localhost:3000](http://localhost:3000) and log in with username:`admin`, password:`admin`.
 5. Go to [localhost:3000/datasources/new](http://localhost:3000/datasources/new) and add Prometheus as a datasource like so: ![grafana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/grafana_setup.png "Grafana Setup").
 6. Go to [localhost:3000/dashboard/new?editview=import](http://localhost:3000/dashboard/new?editview=import) and import both dashboards from [./grafana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/grafana/dashboards).
-7. Go to [http://localhost:5601/app/kibana#/settings/indices/](http://localhost:5601/app/kibana#/settings/indices/) and add the `logstash-logs`index like so: ![kibana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/kibana_setup.png "Kibana Setup").
-8. Go to [http://localhost:5601/app/kibana#/settings/objects](http://localhost:5601/app/kibana#/settings/objects) and import both dashboards from [./kibana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/kibana/dashboards).
+7. Go to [localhost:5601/app/kibana#/settings/indices/](http://localhost:5601/app/kibana#/settings/indices/) and add the `logstash-logs`index like so: ![kibana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/kibana_setup.png "Kibana Setup").
+8. Go to [localhost:5601/app/kibana#/settings/objects](http://localhost:5601/app/kibana#/settings/objects) and import both dashboards from [./kibana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/kibana/dashboards).
+9. Enjoy and explore your logs and metrics:
+* To explore your logs: [localhost:5601/app/kibana#/discover](http://localhost:5601/app/kibana#/discover)
+* To explore your log metrics: [localhost:5601/app/kibana#/dashboard/Exploration](http://localhost:5601/app/kibana#/dashboard/Exploration)
+* To see your most important container and host metrics at a glance: [localhost:3000/dashboard/db/main-overview](http://localhost:3000/dashboard/db/main-overview)
+* To explore any metric that's collected without having to build queries: [localhost:3000/dashboard/db/data-exploration](http://localhost:3000/dashboard/db/data-exploration)
+10. Run the cleanup script to clean up after yourself: `sh cleanup.sh`.
+
 
 
 
