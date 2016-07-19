@@ -9,8 +9,6 @@ Logging: [Logstash](https://www.elastic.co/products/logstash) for collection/log
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publically, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
 
-
-
 ### How to set it up?
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging.git`
@@ -27,8 +25,6 @@ WARNING: This configuration is for testing purposes only. As it is simply forwar
   + To see your most important container and host metrics at a glance: <a href="http://localhost:3000/dashboard/db/main-overview" target="_blank">localhost:3000/dashboard/db/main-overview</a>.
   * To explore any metric that's collected without having to build queries: <a href="http://localhost:3000/dashboard/db/data-exploration" target="_blank">localhost:3000/dashboard/db/data-exploration</a>.
 10. Run the cleanup script to clean up after yourself: `sh cleanup.sh`
-
-
 
 
 ### Grafana/Prometheus Query Building

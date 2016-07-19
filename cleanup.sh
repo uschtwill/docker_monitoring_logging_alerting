@@ -1,13 +1,14 @@
-docker-compose down
+echo --------------------------- Stopping and removing ACTUAL containers...
+docker-compose down -v
 cd data-containers
-docker-compose down
+echo --------------------------- Stopping and removing DATA containers...
+docker-compose down -v
+echo --------------------------- Removing network...
 docker network rm monitoring_logging
-docker volume rm datacontainers_elasticsearch_storage datacontainers_grafana_storage datacontainers_prometheus_storage
-echo ---------------------------
+echo --------------------------- Output from \'docker ps -a\'...
 docker ps -a
-echo ---------------------------
+echo --------------------------- Output from \'docker volume ls\'...
 docker volume ls
-echo ---------------------------
+echo --------------------------- Output from \'docker network ls\'...
 docker network ls
 echo ---------------------------
-

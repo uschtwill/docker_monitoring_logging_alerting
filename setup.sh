@@ -1,13 +1,13 @@
+echo --------------------------- Creating separate docker network...
 docker network create --subnet=192.16.0.0/24 monitoring_logging
 cd data-containers
+echo --------------------------- Starting \(incl. pulling/building images\) DATA containers...
 docker-compose up -d
+echo --------------------------- Stopping data containers...
 docker stop elasticsearch_storage grafana_storage prometheus_storage
 cd ..
+echo --------------------------- Starting \(incl. pulling/building images\) ACTUAL containers...
 docker-compose up -d
-echo ---------------------------
+echo --------------------------- Output from 'docker ps'...
 docker ps
 echo ---------------------------
-open http://localhost:3000/datasources/new
-open http://localhost:3000/dashboard/new?editview=import
-open http://localhost:3000/dashboard/new?editview=import
-
