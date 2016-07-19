@@ -1,22 +1,46 @@
-So I am currently setting up a monitoring dashboard for a [Docker](https://www.docker.com/)-host using [cAdvisor](https://github.com/google/cadvisor), [Prometheus](https://prometheus.io/) and [Grafana](http://grafana.org/).
+### What is this?
 
-cAdvisor for collection, Prometheus for storage, Grafana for visualisation.
+This is an out of the box monitoring and logging suite for [Docker](https://www.docker.com/)-hosts and their containers, complete with dashboards to monitor and explore your host and container logs and metrics.
 
-Unfortunately Grafana doesn't appear to have a fancy query builder [like this one](https://youtu.be/sKNZMtoSHN4?t=2m14s), instead one has to plainly type out one's queries.
+Monitoring: [cAdvisor](https://github.com/google/cadvisor) for collection, [Prometheus](https://prometheus.io/) for storage, [Grafana](http://grafana.org/) for visualisation.
 
-Alas, when building Grfana graphs/dashboards with Prometheus as a data storage, knowing it's query dsl and metric types is important. This also means, that documentation about using Grafana with an InfluxDB won't help you much, further narrowing down the number of avilable resources. This is kind of unfortunate. 
+Logging: [Logstash](https://www.elastic.co/products/logstash) for collection/log-forwarding, [Elasticsearch](https://www.elastic.co/products/elasticsearch) as datastore and backend, [Kibana](https://www.elastic.co/products/kibana) as frontend.
+
+WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publically, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
+
+
+
+
+### How to set it up?
+
+1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging.git`
+2. `cd` into the folder: `cd docker_monitoring_logging`
+3. Run the setup script: `sh run.sh`
+4. Go to [localhost:3000](localhost:3000) and log in with user:admin, pass:admin.
+5. Go to [localhost:3000/datasources/new](http://localhost:3000/datasources/new) and add Prometheus as a datasource like so: ![grafana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/grafana_setup.png "Grafana Setup").
+6. Go to [localhost:3000/dashboard/new?editview=import](http://localhost:3000/dashboard/new?editview=import) and import both dashboards from [./grafana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/grafana/dashboards).
+7. Go to [http://localhost:5601/app/kibana#/settings/indices/](http://localhost:5601/app/kibana#/settings/indices/) and add the `logstash-logs`index like so: ![kibana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/kibana_setup.png "Kibana Setup").
+8. Go to [http://localhost:5601/app/kibana#/settings/objects](http://localhost:5601/app/kibana#/settings/objects) and import both dashboards from [./kibana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/kibana/dashboards).
+
+
+
+### Grafana/Prometheus Query Building
+
+Unfortunately Grafana doesn't appear to have a [fancy query builder](https://youtu.be/sKNZMtoSHN4?t=2m14s) for Prometheus as it does for Graphite or InfluxDB, instead one has to plainly type out one's queries.
+
+Alas, when building Grafana graphs/dashboards with Prometheus as a data storage, knowing it's query dsl and metric types is important. This also means, that documentation about using Grafana with an InfluxDB won't help you much, further narrowing down the number of available resources. This is kind of unfortunate.
 
 Here you can find the official documentation for Prometheus on both the query dsl and the metric types:
 
 
-[Information on Prometheus Querying](https://prometheus.io/docs/querying/basics/)  
-[Information on Prometheus Metric Types](https://prometheus.io/docs/concepts/metric_types/)  
+[Information on Prometheus Querying](https://prometheus.io/docs/querying/basics/)
+[Information on Prometheus Metric Types](https://prometheus.io/docs/concepts/metric_types/)
 
 Furthermore, since I couldn't find proper documentation on the metrics cAdvisor and Prometheus/Node-Exporter expose, I decided to just take the info from the /metrics entpoints and bring it into a human-readable format.
 
-Check them out in the files above. Combining the information on the exposed metrics themselve with that on Prometheus' query dsl and metric types, you should be good to go to build some beautiful dashboards.
+Check them [here](https://github.com/uschtwill/docker_monitoring_logging/tree/master/metrics-explained-for-grafana-query-building). Combining the information on the exposed metrics themselves with that on Prometheus' query dsl and metric types, you should be good to go to build some beautiful dashboards yourself.
 
-Versions:  
-cAdvisor: 0.23.1  
-Prometheus: 0.16.1  
+Versions:
+cAdvisor: 0.23.1
+Prometheus: 0.16.1
 [Node-Exporter](https://github.com/prometheus/node_exporter): 0.12.0
