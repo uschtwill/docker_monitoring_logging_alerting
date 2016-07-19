@@ -1,0 +1,251 @@
+version: '2'
+
+
+services:
+
+
+  logstash:
+    container_name: logstash
+    image: logstash
+    expose:
+      - 5044
+      - 12201/udp
+    hostname: logstash
+    volumes:
+      - ./logstash/logstash.conf:/logstash.conf
+      - ./logstash/patterns:/opt/logstash/extra_patterns
+    restart: always
+    labels:
+      container_group: monitoring
+    networks:
+      default:
+        ipv4_address: 192.16.0.38
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    command: logstash -f /logstash.conf --auto-reload
+
+
+  validate-logstash-config:
+    container_name: validate-logstash-config
+    image: logstash
+    volumes:
+      - ./logstash/logstash.conf:/logstash.conf
+    command: logstash --configtest --config /logstash.conf
+
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    ports:
+      - 9200:9200
+    expose:
+      - 9200
+    hostname: elasticsearch
+    volumes_from:
+      - container:elasticsearch_storage
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+
+  kibana:
+    container_name: kibana
+    build: kibana/
+    ports:
+      - 5601:5601
+    expose:
+      - 5601
+    hostname: kibana
+    volumes:
+      - ./kibana/config/:/opt/kibana/config/
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    # environment:
+    #   - NODE_OPTIONS="--max-old-space-size=200" #fixes memory leak (https://github.com/elastic/kibana/issues/5170)
+
+
+  prometheus:
+    container_name: prometheus
+    build: prometheus/
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+    hostname: prometheus
+    volumes_from:
+      - container:prometheus_storage
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+
+  cadvisor:
+    container_name: cadvisor
+    image: google/cadvisor
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    hostname: cadvisor
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    hostname: grafana
+    volumes_from:
+      - container:grafana_storage
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+
+  filebeat:
+    container_name: filebeat
+    image: prima/filebeat
+    hostname: filebeat
+    volumes:
+      - ./filebeat/filebeat.yml:/filebeat.yml
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+
+  nodeexporter:
+    container_name: nodeexporter
+    image: prom/node-exporter
+    expose:
+      - 9100
+    hostname: nodeexporter
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+
+networks:
+  default:
+    external:
+      name: monitoring_logging
+
+
+  #### Other tools to look into:
+  # alertmanager (Prometheus):
+  # watcher (ELK):
+  # fluentd (Logstash alternative) :
+  # topbeat (Metrics for ELK):
+  # collectd (Alternative for metric collection on nodes):
+
+
+  #### Alternative for Prometheus as a datastore:
+  # influxdb:
+  #   container_name: influxdb
+  #   image: influxdb
+  #   expose:
+  #     - 8083
+  #     - 8086
+  #   hostname: influxdb
+  #   # volumes:
+  #   #   - influxdb:/var/lib/influxdb
+  #   restart: always
+  #   labels:
+  #     container_group: monitoring
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: udp://localhost:12201
+  #       labels: monitoring
+
+
+  #### Example for another endpoint for Prometheus:
+  # couchdbstats:
+  # container_name: couchdbstats
+  # image: gesellix/couchdb-exporter
+  # expose:
+  #   - 9984
+  # hostname: couchdbstats
+  # restart: always
+  # labels:
+  #   container_group: monitoring
+  # logging:
+  #   driver: gelf
+  #   options:
+  #     gelf-address: udp://logstash:12201
+  #     labels: container_group
+  # command: -couchdb.uri=http://couchdb:5984
+
+
+  #### Get a free datadog account to have a look at their dashboards for inspiration:
+  #   datadog:
+  #   container_name: datadog
+  #   image: datadog/docker-dd-agent
+  #   hostname: datadog
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /proc/:/host/proc/:ro
+  #     - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+  #   restart: always
+  #   labels:
+  #     container_group: monitoring
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: udp://localhost:12201
+  #       labels: container_group
+  #   environment:
+  #     - API_KEY=
+
+

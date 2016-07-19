@@ -1,0 +1,41 @@
+version: '2'
+
+
+services:
+
+
+  prometheus_storage:
+    image: prom/prometheus
+    container_name: prometheus_storage
+    volumes:
+      - prometheus_storage:/prometheus
+    labels:
+      container_group: data_container
+
+
+  grafana_storage:
+    image: grafana/grafana
+    container_name: grafana_storage
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    labels:
+      container_group: data_container
+
+
+  elasticsearch_storage:
+    image: elasticsearch
+    container_name: elasticsearch_storage
+    volumes:
+      - elasticsearch_storage:/usr/share/elasticsearch/data
+    labels:
+      container_group: data_container
+
+volumes:
+  elasticsearch_storage:
+  prometheus_storage:
+  grafana_storage:
+
+networks:
+  default:
+    external:
+      name: monitoring_logging
