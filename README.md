@@ -6,7 +6,13 @@ Monitoring: [cAdvisor](https://github.com/google/cadvisor) for collection, [Prom
 
 Logging: [Logstash](https://www.elastic.co/products/logstash) for collection/log-forwarding, [Elasticsearch](https://www.elastic.co/products/elasticsearch) as datastore and backend, [Kibana](https://www.elastic.co/products/kibana) as frontend.
 
+![grafana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_grafana.png "Grafana Screenshot")
+
+![kibana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_kibana.png "Kibana Screenshot")
+
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publically, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
+
+
 
 
 ### How to set it up?
