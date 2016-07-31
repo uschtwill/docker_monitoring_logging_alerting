@@ -1,3 +1,5 @@
+If you have any feedback regarding this monitoring/logging suite, any ideas for improvement, fixes, questions or comments, please feel free to contact me or do a PR!
+
 ### What is this?
 
 This is an out of the box monitoring and logging suite for [Docker](https://www.docker.com/)-hosts and their containers, complete with dashboards to monitor and explore your host and container logs and metrics.
