@@ -4,15 +4,15 @@ If you have any feedback regarding this monitoring/logging suite, any ideas for 
 
 This is an out of the box monitoring and logging suite for [Docker](https://www.docker.com/)-hosts and their containers, complete with dashboards to monitor and explore your host and container logs and metrics.
 
-Monitoring: [cAdvisor](https://github.com/google/cadvisor) for collection, [Prometheus](https://prometheus.io/) for storage, [Grafana](http://grafana.org/) for visualisation.
+Monitoring: [cAdvisor](https://github.com/google/cadvisor) and [node_exporter](https://github.com/prometheus/node_exporter) for collection, [Prometheus](https://prometheus.io/) for storage, [Grafana](http://grafana.org/) for visualisation.
 
-Logging: [Logstash](https://www.elastic.co/products/logstash) for collection/log-forwarding, [Elasticsearch](https://www.elastic.co/products/elasticsearch) as datastore and backend, [Kibana](https://www.elastic.co/products/kibana) as frontend.
+Logging: [Filebeat](https://www.elastic.co/products/beats/filebeat) for collection and log-collection and forwarding, [Logstash](https://www.elastic.co/products/logstash) for aggregation and processing, [Elasticsearch](https://www.elastic.co/products/elasticsearch) as datastore/backend and [Kibana](https://www.elastic.co/products/kibana) as the frontend.
 
 ![grafana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_grafana.png "Grafana Screenshot")
 
 ![kibana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_kibana.png "Kibana Screenshot")
 
-WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publically, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
+WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publicly, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
 
 
@@ -45,6 +45,7 @@ Here you can find the official documentation for Prometheus on both the query ds
 
 
 [Information on Prometheus Querying](https://prometheus.io/docs/querying/basics/)
+
 [Information on Prometheus Metric Types](https://prometheus.io/docs/concepts/metric_types/)
 
 Furthermore, since I couldn't find proper documentation on the metrics cAdvisor and Prometheus/Node-Exporter expose, I decided to just take the info from the /metrics entpoints and bring it into a human-readable format.
@@ -54,4 +55,4 @@ Check them [here](https://github.com/uschtwill/docker_monitoring_logging/tree/ma
 Versions:
 cAdvisor: 0.23.1
 Prometheus: 0.16.1
-[Node-Exporter](https://github.com/prometheus/node_exporter): 0.12.0
+Node-Exporter: 0.12.0
