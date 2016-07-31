@@ -32,7 +32,7 @@ WARNING: This configuration is for testing purposes only. As it is simply forwar
   - To explore your log metrics: <a href="http://localhost:5601/app/kibana#/dashboard/Exploration" target="_blank">localhost:5601/app/kibana#/dashboard/Exploration</a>.
   + To see your most important container and host metrics at a glance: <a href="http://localhost:3000/dashboard/db/main-overview" target="_blank">localhost:3000/dashboard/db/main-overview</a>.
   * To explore any metric that's collected without having to build queries: <a href="http://localhost:3000/dashboard/db/data-exploration" target="_blank">localhost:3000/dashboard/db/data-exploration</a>.
-10. Run the cleanup script to clean up after yourself: `sh cleanup.sh`
+10. AFTER you're done testing this suite and you want to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
 
 
 ### Grafana/Prometheus Query Building
