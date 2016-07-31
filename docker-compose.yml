@@ -10,7 +10,6 @@ services:
     expose:
       - 5044
       - 12201/udp
-    hostname: logstash
     volumes:
       - ./logstash/logstash.conf:/logstash.conf
       - ./logstash/patterns:/opt/logstash/extra_patterns
@@ -43,7 +42,6 @@ services:
       - 9200:9200
     expose:
       - 9200
-    hostname: elasticsearch
     volumes_from:
       - storage/elasticsearch:/usr/share/elasticsearch/data
     restart: always
@@ -63,7 +61,6 @@ services:
       - 5601:5601
     expose:
       - 5601
-    hostname: kibana
     volumes:
       - ./kibana/config/:/opt/kibana/config/
     restart: always
@@ -85,7 +82,6 @@ services:
       - 9090:9090
     expose:
       - 9090
-    hostname: prometheus
     volumes:
       - storage/prometheus:/prometheus
     restart: always
@@ -105,7 +101,6 @@ services:
       - 8080:8080
     expose:
       - 8080
-    hostname: cadvisor
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:rw"
@@ -128,7 +123,6 @@ services:
       - 3000:3000
     expose:
       - 3000
-    hostname: grafana
     volumes:
       - storage/grafana:/var/lib/grafana
     restart: always
@@ -147,7 +141,6 @@ services:
   filebeat:
     container_name: filebeat
     image: prima/filebeat
-    hostname: filebeat
     volumes:
       - ./filebeat/filebeat.yml:/filebeat.yml
     restart: always
@@ -165,7 +158,6 @@ services:
     image: prom/node-exporter
     expose:
       - 9100
-    hostname: nodeexporter
     restart: always
     labels:
       container_group: monitoring
