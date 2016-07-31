@@ -45,7 +45,7 @@ services:
       - 9200
     hostname: elasticsearch
     volumes_from:
-      - container:elasticsearch_storage
+      - storage/elasticsearch:/usr/share/elasticsearch/data
     restart: always
     labels:
       container_group: monitoring
@@ -86,8 +86,8 @@ services:
     expose:
       - 9090
     hostname: prometheus
-    volumes_from:
-      - container:prometheus_storage
+    volumes:
+      - storage/prometheus:/prometheus
     restart: always
     labels:
       container_group: monitoring
@@ -129,8 +129,8 @@ services:
     expose:
       - 3000
     hostname: grafana
-    volumes_from:
-      - container:grafana_storage
+    volumes:
+      - storage/grafana:/var/lib/grafana
     restart: always
     labels:
       container_group: monitoring
