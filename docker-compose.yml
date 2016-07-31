@@ -42,8 +42,8 @@ services:
       - 9200:9200
     expose:
       - 9200
-    volumes_from:
-      - storage/elasticsearch:/usr/share/elasticsearch/data
+    volumes:
+      - ./storage/elasticsearch:/usr/share/elasticsearch/data
     restart: always
     labels:
       container_group: monitoring
@@ -83,7 +83,7 @@ services:
     expose:
       - 9090
     volumes:
-      - storage/prometheus:/prometheus
+      - ./storage/prometheus:/prometheus
     restart: always
     labels:
       container_group: monitoring
@@ -124,7 +124,7 @@ services:
     expose:
       - 3000
     volumes:
-      - storage/grafana:/var/lib/grafana
+      - ./storage/grafana:/var/lib/grafana
     restart: always
     labels:
       container_group: monitoring
