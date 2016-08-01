@@ -71,8 +71,9 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
-    # environment:
-    #   - NODE_OPTIONS="--max-old-space-size=200" #fixes memory leak (https://github.com/elastic/kibana/issues/5170)
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=200
+      # fixes memory leak (https://github.com/elastic/kibana/issues/5170)
 
 
   prometheus:
