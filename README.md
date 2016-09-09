@@ -14,7 +14,7 @@ Logging: [Filebeat](https://www.elastic.co/products/beats/filebeat) for collecti
 
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publicly, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
-
+The Grafana dashboard can also be found on grafana.net: [https://grafana.net/dashboards/395](https://grafana.net/dashboards/395).
 
 
 ### How to set it up?
