@@ -1,0 +1,34 @@
+# This configuration makes Elastalert send alerts to a Slack channel and to Logstash.
+# Logstash is curled and active, Slack needs to uncommented. Be sure to have your webhook_url nearby. Elastalert will probably crash without filling it in. It likes to crash.
+# Information on how to configure Elastalert rules is to be found here: https://elastalert.readthedocs.io/en/latest/ruletypes.html
+
+
+es_host: elasticsearch
+es_port: 9200
+name: Part of the System is Acting up (blanket log_level catch)
+index: logstash-logs
+
+
+type: any
+
+
+filter:
+- query:
+    query_string:
+      query: "log_level:CRIT OR log_level: CRITICAL OR log_level:WARN OR log_level: WARNING OR log_level: ERROR OR log_level: FATAL"
+
+
+
+alert:
+  # - "slack"
+  - "command"
+command: "curl -s -H 'content-type: application/json' -XPOST 'http://logstash:8080/' -d '{ \"@timestamp\": \"%(@timestamp)s\", \"host\": \"%(host)s\", \"container_name\": \"%(container_name)s\", \"log_level\": \"%(log_level)s\", \"message\": \"%(message)s\" }' > /dev/null"
+
+alert_text: "{0} -- {1} -- {2} -- {3} -- {4}"
+alert_text_args: ["@timestamp", "host", "container_name", "log_level", "message"]
+alert_text_type: alert_text_only
+
+# slack:
+# slack_webhook_url: # Put your slack webhook_url here.
+# slack_emoji_override: "space_invader"
+# slack_username_override: "Logging - Alerts (ELK)"

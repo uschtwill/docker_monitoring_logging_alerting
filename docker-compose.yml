@@ -204,13 +204,19 @@ services:
 ####                    ALERTING                     ####
 #########################################################
 
-  filebeat:
-    container_name: filebeat
-    image: prima/filebeat
-    volumes:
-      - ./filebeat/filebeat.yml:/filebeat.yml
   # Alerting plugin wrapping Prometheus and taking care of your metric alerting needs.
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager
+    expose:
+      - 9093
     restart: always
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+      - ./storage/alertmanager/:/alertmanager
+    command:
+      - '-config.file=/etc/alertmanager/config.yml'
+      - '-storage.path=/alertmanager'
     labels:
       container_group: monitoring
     logging:
@@ -221,14 +227,16 @@ services:
 
 #########################################################
 
-  nodeexporter:
-    container_name: nodeexporter
-    image: prom/node-exporter
-    expose:
-      - 9100
   # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
   elastalert:
+    build: elastalert/
     restart: always
+    volumes:
+      - ./elastalert/log:/opt/log
+      - ./elastalert/config:/opt/config
+      - ./elastalert/rules:/opt/rules
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
     labels:
       container_group: monitoring
     logging:
