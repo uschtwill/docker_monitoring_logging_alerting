@@ -9,23 +9,59 @@ global:
   external_labels:
       monitor: 'codelab-monitor'
 
-# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+# Load and evaluate rules in this file every  gc'evaluation_interval' seconds.
 rule_files:
-  # - "first.rules"
-  # - "second.rules"
+  - "alert.rules_nodes"
+  - "alert.rules_containers"
+  - "alert.rules_container-groups"
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: 'prometheus'
 
-    # Override the global default and scrape targets from this job every 5 seconds.
+  - job_name: 'node'
     scrape_interval: 10s
     scrape_timeout: 5s
+    static_configs:
+      - targets: ['nodeexporter:9100']
+        labels: {'host': 'Eisbach'}
 
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
+  - job_name: 'containers'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels: {'host': 'Eisbach'}
 
-    target_groups:
-      - targets: ['localhost:9090','cadvisor:8080','nodeexporter:9100']
+  #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
+
+  - job_name: 'prometheus-server'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+        labels: {'host': 'Eisbach'}
+
+  # - job_name: 'couchdb'
+  #   scrape_interval: 10s
+  #   scrape_timeout: 5s
+  #   static_configs:
+  #     - targets: ['couchdbstats:9984']
+  #       labels: {'host': 'Eisbach'}
+  # Will/23.08.16: switched of, as I am not sure at this point where the new /_stats endpoint for couchdb 2.0 is. this image is still checking at /_stats and will thus throw non-stop MONITORING SERVICE DOWN alerts. See corresponding entry in monitoring docker-compose.yml.
+
+
+
+  # - job_name: 'prometheus'
+
+  #   # Override the global default and scrape targets from this job every 5 seconds.
+  #   scrape_interval: 10s
+  #   scrape_timeout: 5s
+
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+
+  #   target_groups:
+  #     - targets: ['localhost:9090']
+  #       labels: {'host': 'prometheus'}

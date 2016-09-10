@@ -153,6 +153,33 @@ services:
 #########################################################
 
   # Storage and search backend. Gets all metrics from cAdvisor and Nodeexporter and is the backend that Grafana runs on.
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+    volumes:
+      - ./storage/prometheus:/prometheus
+      #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules:/etc/prometheus
+    restart: always
+    command:
+      - "-config.file=/etc/prometheus/prometheus.yml"
+      - "-storage.local.path=/prometheus"
+      - "-web.console.libraries=/etc/prometheus/console_libraries"
+      - "-web.console.templates=/etc/prometheus/consoles"
+      - "-web.listen-address=:9090"
+      - "-alertmanager.url=http://alertmanager:9093"
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
 
 #########################################################
 
