@@ -1,4 +1,4 @@
-If you have any feedback regarding this monitoring/logging suite, any ideas for improvement, fixes, questions or comments, please feel free to contact me or do a PR!
+If you have any feedback regarding this monitoring/logging/alerting suite, any ideas for improvement, fixes, questions or comments, please feel free to contact me or do a PR!
 
 ### What is this?
 
@@ -7,6 +7,8 @@ This is an out of the box monitoring and logging suite for [Docker](https://www.
 Monitoring: [cAdvisor](https://github.com/google/cadvisor) and [node_exporter](https://github.com/prometheus/node_exporter) for collection, [Prometheus](https://prometheus.io/) for storage, [Grafana](http://grafana.org/) for visualisation.
 
 Logging: [Filebeat](https://www.elastic.co/products/beats/filebeat) for collection and log-collection and forwarding, [Logstash](https://www.elastic.co/products/logstash) for aggregation and processing, [Elasticsearch](https://www.elastic.co/products/elasticsearch) as datastore/backend and [Kibana](https://www.elastic.co/products/kibana) as the frontend.
+
+Alerting: [elastalert](https://github.com/Yelp/elastalert) as a drop-in for Elastic.io's [Watcher](https://www.elastic.co/products/watcher) to alert for certain log events and Prometheus' [Alertmanager](https://github.com/prometheus/alertmanager) for alerts regarding metrics.
 
 ![grafana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_grafana.png "Grafana Screenshot")
 
@@ -35,6 +37,21 @@ The Grafana dashboard can also be found on grafana.net: [https://grafana.net/das
 10. AFTER you're done testing this suite and you want to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
 
 
+### Alerting
+
+This suite uses elastalert and Alertmanager for alerting. Rules for logging alerts (elastalert) go into ./elastalert/rules/ and rules for monitoring alerts (Alertmanager) go into ./prometheus/rules/. Indeed, in this case Alertmanager only takes care of the communications of the alerting, the rules themselves are defined "in" Prometheus.
+
+Both, Alertmanager and elastalert, can be configured to send their alerts to various outputs. In this suite, Logstash and Slack are set up. The integration with Logstash works out of the box, for adding Slack you will need to insert your webhook url.
+
+The alerts that are being send to Logstash can be seen when looking at the 'logstash-alerts' index. Apart from functioning as a first output, sending and storing the alerts to Elasticsearch via Logstash is also neat, because it allows us to query them from Grafana and have them imported to our Dashboard as annotations.
+
+INSERT PICTURE OF ANNOTATIONS
+
+The monitoring alerting rules, which are stored in the Prometheus directory, contain a fake alert that should be firing from the beginning and demonstrates the concept. Find it and comment it out to have some peace. Also, there should be logging alerts coming in soon as well, this suite by itself consists of 10 containers, and something is always complaining. Of course you can also force things by breaking stuff yourself - the blanket log level catch that comes out of the box should catch it.
+
+If you're annoyed by non-events repeatedly triggering alerts, throw them in ./logstash/config/31-non-events.conf in order for logstash to silence them by changing their log_level upon import.
+
+
 ### Grafana/Prometheus Query Building
 
 Unfortunately Grafana doesn't appear to have a [fancy query builder](https://youtu.be/sKNZMtoSHN4?t=2m14s) for Prometheus as it does for Graphite or InfluxDB, instead one has to plainly type out one's queries.
@@ -51,8 +68,3 @@ Here you can find the official documentation for Prometheus on both the query ds
 Furthermore, since I couldn't find proper documentation on the metrics cAdvisor and Prometheus/Node-Exporter expose, I decided to just take the info from the /metrics entpoints and bring it into a human-readable format.
 
 Check them [here](https://github.com/uschtwill/docker_monitoring_logging/tree/master/metrics-explained-for-grafana-query-building). Combining the information on the exposed metrics themselves with that on Prometheus' query dsl and metric types, you should be good to go to build some beautiful dashboards yourself.
-
-Versions:
-cAdvisor: 0.23.1
-Prometheus: 0.16.1
-Node-Exporter: 0.12.0
