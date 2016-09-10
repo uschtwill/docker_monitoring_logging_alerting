@@ -32,7 +32,7 @@ services:
       - 5044
       - 12201/udp
     volumes:
-      - ./logstash/logstash.conf:/logstash.conf
+      - ./logstash/config:/config
       - ./logstash/patterns:/opt/logstash/extra_patterns
     restart: always
     labels:
@@ -45,7 +45,7 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
-    command: logstash -f /logstash.conf --auto-reload
+    command: logstash -f /config --auto-reload
 
 #########################################################
 
@@ -54,8 +54,8 @@ services:
     container_name: validate-logstash-config
     image: logstash
     volumes:
-      - ./logstash/logstash.conf:/logstash.conf
-    command: logstash --configtest --config /logstash.conf
+      - ./logstash/config:/config
+    command: logstash --configtest --config /config
 
 #########################################################
 
@@ -208,6 +208,8 @@ services:
   alertmanager:
     container_name: alertmanager
     image: prom/alertmanager
+    ports:
+      - 9093:9093
     expose:
       - 9093
     restart: always
@@ -229,6 +231,7 @@ services:
 
   # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
   elastalert:
+    container_name: elastalert
     build: elastalert/
     restart: always
     volumes:
@@ -237,6 +240,8 @@ services:
       - ./elastalert/rules:/opt/rules
     environment:
       - ELASTICSEARCH_HOST=elasticsearch
+    links:
+      - elasticsearch:elasticsearch_host
     labels:
       container_group: monitoring
     logging:
