@@ -5,6 +5,11 @@ filebeat:
   # List of prospectors to fetch data.
   prospectors:
     # Each - is a prospector. Below are the prospector specific configurations
+    # -
+    #   input_type: stdin
+    #   paths:
+    #     - "-"
+    #   document_type: log
     -
       # Paths that should be crawled and fetched. Glob based paths.
       # To fetch all ".log" files from a specific level of subdirectories
@@ -13,6 +18,9 @@ filebeat:
       # Make sure not file is defined twice as this can lead to unexpected behaviour.
       paths:
         - /var/log/*.log
+        - /var/log/*/*.log
+        - /var/log/*/*/*.log
+        - /var/log/syslog
       # - c:\programdata\elasticsearch\logs\*
 
       # Configure the file encoding for reading files with international characters
@@ -62,7 +70,7 @@ filebeat:
       # Setting tail_files to true means filebeat starts readding new files at the end
       # instead of the beginning. If this is used in combination with log rotation
       # this can mean that the first entries of a new file are skipped.
-      #tail_files: false
+      tail_files: true
 
       # Backoff values define how agressively filebeat crawls new files for updates
       # The default values can be used in most cases. Backoff defines how long it is waited
@@ -291,7 +299,7 @@ shipper:
   # The name of the shipper that publishes the network data. It can be used to group
   # all the transactions sent by a single shipper in the web interface.
   # If this options is not defined, the hostname is used.
-  #name:
+  name: filebeat
 
   # The tags of the shipper are included in their own field with each
   # transaction published. Tags make it easy to group servers by different
