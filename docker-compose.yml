@@ -106,17 +106,12 @@ services:
 ####                   MONITORING                    ####
 #########################################################
 
-  prometheus:
-    container_name: prometheus
-    build: prometheus/
-    ports:
-      - 9090:9090
   # Runs on your node(s) and forwards node(host) metrics to Prometheus.
   nodeexporter:
+    container_name: nodeexporter
+    image: prom/node-exporter
     expose:
-      - 9090
-    volumes:
-      - ./storage/prometheus:/prometheus
+      - 9100
     restart: always
     labels:
       container_group: monitoring
