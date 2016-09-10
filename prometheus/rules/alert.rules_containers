@@ -1,0 +1,32 @@
+
+ALERT high_cpu_usage_on_container
+  IF sum(rate(container_cpu_usage_seconds_total{name=~".+"}[5m])) by (name,host) * 100 > 50
+  FOR 5m
+  ANNOTATIONS {
+      summary = "HIGH CPU USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
+      description = "{{ $labels.name }} is using a LOT of CPU. CPU usage is {{ humanize $value}}%.",
+  }
+
+ALERT elasticsearch_eating_memory
+  IF sum(container_memory_rss{name=~"monitoring_elasticsearch_1"}) by (host, name) > 1200000000
+  FOR 5m
+  ANNOTATIONS {
+      summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }
+
+ALERT prometheus_eating_memory
+  IF sum(container_memory_rss{name=~"monitoring_prometheus_1"}) by (host, name) > 1200000000
+  FOR 5m
+  ANNOTATIONS {
+      summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }
+
+ALERT container_eating_memory
+  IF sum(container_memory_rss{name=~".+",name!="monitoring_elasticsearch_1",name!="monitoring_prometheus_1"}) by (host,name) > 700000000
+  FOR 5m
+  ANNOTATIONS {
+      summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }

@@ -1,0 +1,45 @@
+
+ALERT monitoring_service_down
+  IF up == 0
+  FOR 5m
+  ANNOTATIONS {
+      summary = "MONITORING SERVICE DOWN WARNING: NODE '{{ $labels.host }}'",
+      description = "The monitoring service '{{ $labels.job }}' is down.",
+  }
+
+ALERT high_load_on_node
+  IF node_load5 > 2
+  FOR 3m
+  ANNOTATIONS {
+      summary = "HIGH LOAD WARINING: NODE '{{ $labels.host }}'",
+      description = "{{ $labels.host}} is under high load. Load is {{ humanize $value }}.",
+  }
+
+ALERT node_running_out_of_memory
+  IF node_memory_MemAvailable < 1500000000
+  FOR 5m
+  ANNOTATIONS {
+      summary = "LOW MEMORY WARING: NODE '{{ $labels.host }}'",
+      description = "Less than 1.5GB of free memory. Free memory at {{ humanize $value }} GB.",
+  }
+
+ALERT node_running_out_of_disk_space
+  IF node_filesystem_free{mountpoint="/etc/hostname"} < 40000000000
+  FOR 5m
+  ANNOTATIONS {
+      summary = "LOW DISK SPACE WARING: NODE '{{ $labels.host }}'",
+      description = "Less than 40GB of free disk space. Free disk space at {{ humanize $value }} GB.",
+  }
+
+
+
+
+################################### TEST ALERT
+
+ALERT TESTING_high_load_on_node
+  IF node_load1 > 0
+  FOR 1s
+  ANNOTATIONS {
+      summary = "+++ TESTING ++++ TESTING ++++ TESTING +++ ::: HIGH LOAD WARINING: NODE '{{ $labels.host }}'",
+      description = "{{ $labels.host}} is under high load. Load is {{ humanize $value }}.",
+  }
