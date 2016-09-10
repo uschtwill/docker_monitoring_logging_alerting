@@ -3,7 +3,28 @@ version: '2'
 
 services:
 
+#########################################################
+####                    LOGGING                      ####
+#########################################################
 
+  # Runs on your node(s) and forwards all logs to Logstash.
+  filebeat:
+    container_name: filebeat
+    image: prima/filebeat
+    volumes:
+      - ./filebeat/filebeat.yml:/filebeat.yml
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Aggregates logs and forwards them to Elasticsearch.
   logstash:
     container_name: logstash
     image: logstash
@@ -26,7 +47,9 @@ services:
         labels: container_group
     command: logstash -f /logstash.conf --auto-reload
 
+#########################################################
 
+  # Logstash configs can be a hassle. Run 'docker-compose run --rm validate-logstash-config' in order to quickly check your logstash config.
   validate-logstash-config:
     container_name: validate-logstash-config
     image: logstash
@@ -34,7 +57,9 @@ services:
       - ./logstash/logstash.conf:/logstash.conf
     command: logstash --configtest --config /logstash.conf
 
+#########################################################
 
+  # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch
@@ -53,7 +78,9 @@ services:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
 
+#########################################################
 
+  # Pretty frontend to explore and check out all your logs.
   kibana:
     container_name: kibana
     build: kibana/
@@ -75,12 +102,17 @@ services:
       - NODE_OPTIONS=--max-old-space-size=200
       # fixes memory leak (https://github.com/elastic/kibana/issues/5170)
 
+#########################################################
+####                   MONITORING                    ####
+#########################################################
 
   prometheus:
     container_name: prometheus
     build: prometheus/
     ports:
       - 9090:9090
+  # Runs on your node(s) and forwards node(host) metrics to Prometheus.
+  nodeexporter:
     expose:
       - 9090
     volumes:
@@ -94,7 +126,9 @@ services:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
 
+#########################################################
 
+  # Runs on your node(s) and forwards container metrics to Prometheus.
   cadvisor:
     container_name: cadvisor
     image: google/cadvisor
@@ -116,7 +150,13 @@ services:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
 
+#########################################################
 
+  # Storage and search backend. Gets all metrics from cAdvisor and Nodeexporter and is the backend that Grafana runs on.
+
+#########################################################
+
+  # Pretty frontend to explore and check out all your metrics.
   grafana:
     container_name: grafana
     image: grafana/grafana
@@ -138,12 +178,16 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
+#########################################################
+####                    ALERTING                     ####
+#########################################################
 
   filebeat:
     container_name: filebeat
     image: prima/filebeat
     volumes:
       - ./filebeat/filebeat.yml:/filebeat.yml
+  # Alerting plugin wrapping Prometheus and taking care of your metric alerting needs.
     restart: always
     labels:
       container_group: monitoring
@@ -153,12 +197,15 @@ services:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
 
+#########################################################
 
   nodeexporter:
     container_name: nodeexporter
     image: prom/node-exporter
     expose:
       - 9100
+  # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
+  elastalert:
     restart: always
     labels:
       container_group: monitoring
@@ -168,11 +215,17 @@ services:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
 
+#########################################################
+####                   Networking                    ####
+#########################################################
 
+# Extra-network is necessary to have a dedicated IP for Logstash to forwards log to.
 networks:
   default:
     external:
       name: monitoring_logging
+
+#########################################################
 
 
   #### Other tools to look into:
