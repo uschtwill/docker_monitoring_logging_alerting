@@ -41,7 +41,7 @@ This suite comes with storage directories for Kibana and Grafana that contain th
 6. AFTER you're done testing this suite and you want to revert to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
 
 
-### Alerting
+### Alerting and Annotations in Grafana
 
 This suite uses elastalert and Alertmanager for alerting. Rules for logging alerts (elastalert) go into ./elastalert/rules/ and rules for monitoring alerts (Alertmanager) go into ./prometheus/rules/. Alertmanager only takes care of the communications part the monitoring alerts, the rules themselves are defined "in" Prometheus.
 
