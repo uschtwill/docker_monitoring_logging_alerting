@@ -1,3 +1,6 @@
 storage/alertmanager
 storage/prometheus
+storage/elasticsearch/**/elastalert_status
+storage/elasticsearch/**/logstash-alerts
+storage/elasticsearch/**/logstash-logs
 elastalert/log
