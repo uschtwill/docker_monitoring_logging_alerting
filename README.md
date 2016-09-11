@@ -18,14 +18,14 @@ Alerting: [elastalert](https://github.com/Yelp/elastalert) as a drop-in for Elas
 
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publicly, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
-The Grafana dashboard can also be found on grafana.net: [https://grafana.net/dashboards/395](https://grafana.net/dashboards/395).
+The Grafana dashboard (a bit slimmed down) can also be found on grafana.net: [https://grafana.net/dashboards/395](https://grafana.net/dashboards/395).
 
 
 ### How to set it up?
 
 This suite comes with storage directories for Kibana and Grafana that contain the configuration for the data sources and dashboards. these directories will be mounted into the two containers as volumes. This is for your convenience and eliminates some manual setup steps.
 
-1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging.git`
+1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging_alerting.git`
 2. `cd` into the folder: `cd docker_monitoring_logging`
 3. Run the setup script: `sh setup.sh`
 4. Enjoy and explore your logs and metrics:
