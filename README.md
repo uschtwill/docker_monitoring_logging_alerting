@@ -21,20 +21,21 @@ The Grafana dashboard can also be found on grafana.net: [https://grafana.net/das
 
 ### How to set it up?
 
+This suite comes with storage directories for Kibana and Grafana that contain the configuration for the data sources and dashboards. these directories will be mounted into the two containers as volumes. This is for your convenience and eliminates some manual setup steps.
+
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging.git`
 2. `cd` into the folder: `cd docker_monitoring_logging`
 3. Run the setup script: `sh setup.sh`
-4. Go to <a href="http://localhost:3000" target="_blank">localhost:3000</a>[]() and log in with username:`admin`, password:`admin`.
-5. Go to <a href="http://localhost:3000/datasources/new" target="_blank">localhost:3000/datasources/new</a> and add Prometheus as a datasource like so: ![grafana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/grafana_setup.png "Grafana Setup").
-6. Go to <a href="http://localhost:3000/dashboard/new?editview=import" target="_blank">localhost:3000/dashboard/new?editview=import</a> and import both dashboards from [./grafana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/grafana/dashboards).
-7. Go to <a href="http://localhost:5601/app/kibana#/settings/indices/" target="_blank">localhost:5601/app/kibana#/settings/indices/</a> and add the `logstash-logs`index like so: ![kibana_setup](https://github.com/uschtwill/docker_monitoring_logging/blob/master/kibana_setup.png "Kibana Setup").
-8. Go to <a href="http://localhost:5601/app/kibana#/settings/objects" target="_blank">localhost:5601/app/kibana#/settings/objects</a> and import both dashboards from [./kibana/dashboards](https://github.com/uschtwill/docker_monitoring_logging/tree/master/kibana/dashboards).
-9. Enjoy and explore your logs and metrics:
+4. Enjoy and explore your logs and metrics:
   * To explore your logs: <a href="http://localhost:5601/app/kibana#/discover" target="_blank">localhost:5601/app/kibana#/discover</a>.
-  - To explore your log metrics: <a href="http://localhost:5601/app/kibana#/dashboard/Exploration" target="_blank">localhost:5601/app/kibana#/dashboard/Exploration</a>.
+  - To explore your logging metrics: <a href="http://localhost:5601/app/kibana#/dashboard/Exploration" target="_blank">localhost:5601/app/kibana#/dashboard/Exploration</a>.
   + To see your most important container and host metrics at a glance: <a href="http://localhost:3000/dashboard/db/main-overview" target="_blank">localhost:3000/dashboard/db/main-overview</a>.
   * To explore any metric that's collected without having to build queries: <a href="http://localhost:3000/dashboard/db/data-exploration" target="_blank">localhost:3000/dashboard/db/data-exploration</a>.
-10. AFTER you're done testing this suite and you want to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
+  * To see all monitoring alerts and their status in prometheus: <a href="http://localhost:9090/alerts" target="_blank">localhost:9090/alerts</a>.
+  * To manage your monitoring alerts (e.g. silence them) in Alertmanager: <a href="http://localhost:9093/#/alerts" target="_blank">localhost:9093/#/alerts</a>. Elastalert (logging alerts) unfortunately does not have a frontend.
+  * Just to see what the cAdvisor frontend  looks like (you'll use Grafana for looking at monitoring metrics anyways): <a href="http://localhost:8080/containers/" target="_blank">localhost:8080/containers/</a>
+  * To say hello to your Elasticsearch instance: `curl localhost:9200`.
+5. AFTER you're done testing this suite and you want to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
 
 
 ### Alerting
@@ -45,7 +46,7 @@ Both, Alertmanager and elastalert, can be configured to send their alerts to var
 
 The alerts that are being send to Logstash can be seen when looking at the 'logstash-alerts' index. Apart from functioning as a first output, sending and storing the alerts to Elasticsearch via Logstash is also neat, because it allows us to query them from Grafana and have them imported to our Dashboard as annotations.
 
-INSERT PICTURE OF ANNOTATIONS
+![annotations_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_annotations.png "Annotations Screenshot")
 
 The monitoring alerting rules, which are stored in the Prometheus directory, contain a fake alert that should be firing from the beginning and demonstrates the concept. Find it and comment it out to have some peace. Also, there should be logging alerts coming in soon as well, this suite by itself consists of 10 containers, and something is always complaining. Of course you can also force things by breaking stuff yourself - the blanket log level catch that comes out of the box should catch it.
 
