@@ -3,4 +3,5 @@ storage/prometheus
 storage/elasticsearch/**/elastalert_status
 storage/elasticsearch/**/logstash-alerts
 storage/elasticsearch/**/logstash-logs
+storage/elasticsearch/**/node.lock
 elastalert/log
