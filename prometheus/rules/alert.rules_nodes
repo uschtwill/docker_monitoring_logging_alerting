@@ -40,6 +40,6 @@ ALERT TESTING_high_load_on_node
   IF node_load1 > 0
   FOR 1s
   ANNOTATIONS {
-      summary = "+++ TESTING ++++ TESTING ++++ TESTING +++ ::: HIGH LOAD WARINING: NODE '{{ $labels.host }}'",
+      summary = "+++ TESTING ++++ TESTING ++++ TESTING +++ ::: HIGH LOAD WARNING: NODE '{{ $labels.host }}'",
       description = "{{ $labels.host}} is under high load. Load is {{ humanize $value }}.",
   }

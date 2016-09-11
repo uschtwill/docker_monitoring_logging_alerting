@@ -1,1 +1,3 @@
-storage/
+storage/alertmanager
+storage/prometheus
+elastalert/log
