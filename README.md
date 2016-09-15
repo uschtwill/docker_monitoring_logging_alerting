@@ -10,11 +10,11 @@ Logging: [Filebeat](https://www.elastic.co/products/beats/filebeat) for collecti
 
 Alerting: [elastalert](https://github.com/Yelp/elastalert) as a drop-in for Elastic.io's [Watcher](https://www.elastic.co/products/watcher) for alerts triggered by certain container or host log events and Prometheus' [Alertmanager](https://github.com/prometheus/alertmanager) for alerts regarding metrics.
 
-![grafana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_grafana.png "Grafana Screenshot")
+![grafana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshot_grafana.png "Grafana Screenshot")
 
-![kibana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_kibana.png "Kibana Screenshot")
+![kibana_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshot_kibana.png "Kibana Screenshot")
 
-![alerts_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_alerts.png "Alerts Screenshot")
+![alerts_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshot_alerts.png "Alerts Screenshot")
 
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publicly, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
@@ -49,7 +49,7 @@ Both Alertmanager and elastalert can be configured to send their alerts to vario
 
 The alerts that are sent to Logstash can be checked by looking at the 'logstash-alerts' index in Kibana. Apart from functioning as a first output, sending and storing the alerts to Elasticsearch via Logstash is also neat because it allows us to query them from Grafana and have them imported to its Dashboards as annotations.
 
-![annotations_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshot_annotations.png "Annotations Screenshot")
+![annotations_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshot_annotations.png "Annotations Screenshot")
 
 The monitoring alerting rules, which are stored in the Prometheus directory, contain a fake alert that should be firing from the beginning and demonstrates the concept. Find it and comment it out to have some peace. Also, there should be logging alerts coming in soon as well, this suite by itself already consists of 10 containers, and something is always complaining. Of course you can also force things by breaking stuff yourself - the `blanket_log-level_catch.yaml` rule that's already set up should catch it.
 
