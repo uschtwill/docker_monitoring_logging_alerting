@@ -26,7 +26,7 @@ The Grafana dashboard (a bit slimmed down) can also be found on grafana.net: [ht
 This suite comes with storage directories for Kibana and Grafana that contain the configuration for the data sources and dashboards. these directories will be mounted into the two containers as volumes. This is for your convenience and eliminates some manual setup steps.
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging_alerting.git`
-2. `cd` into the folder: `cd docker_monitoring_logging`
+2. `cd` into the folder: `cd docker_monitoring_logging_alerting`
 3. Run the setup script: `sh setup.sh`
 4. Enjoy and explore your logs and metrics:
   * To explore your logs: <a href="http://localhost:5601/app/kibana#/discover" target="_blank">localhost:5601/app/kibana#/discover</a>.
