@@ -2,6 +2,8 @@ If you have any feedback regarding this monitoring/logging/alerting suite, any i
 
 ### What is this?
 
+[Blog post on Medium with some more elaboration.](https://medium.com/@uschtwill/docker-container-and-host-monitoring-logging-in-a-box-e60c45aebcf8#.fd2wd5bup)
+
 This is an out of the box monitoring, logging and alerting suite for [Docker](https://www.docker.com/)-hosts and their containers, complete with dashboards to monitor and explore your host and container logs and metrics.
 
 Monitoring: [cAdvisor](https://github.com/google/cadvisor) and [node_exporter](https://github.com/prometheus/node_exporter) for collection, [Prometheus](https://prometheus.io/) for storage, [Grafana](http://grafana.org/) for visualisation.
