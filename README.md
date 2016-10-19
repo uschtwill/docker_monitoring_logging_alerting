@@ -74,3 +74,7 @@ Here you can find the official documentation for Prometheus on both the query ds
 Furthermore, since I couldn't find proper documentation on the metrics cAdvisor and Prometheus/Node-Exporter expose, I decided to just take the info from the /metrics entpoints and bring it into a human-readable format.
 
 Check them [here](https://github.com/uschtwill/docker_monitoring_logging/tree/master/metrics-explained-for-grafana-query-building). Combining the information on the exposed metrics themselves with that on Prometheus' query dsl and metric types, you should be good to go to build some beautiful dashboards yourself.
+
+### Known Issues
+
+**Bad umask:** If your umask is bad, and not for example 0022, it could create files/folder with low permissions. Some containers do not start up when that is the case, e.g. Kibana can't read the configd. Setting this umask before downloading the git repo fixes this issue. _(pointed out by @riemers)_
