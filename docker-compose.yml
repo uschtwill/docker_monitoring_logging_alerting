@@ -10,7 +10,7 @@ services:
   # Runs on your node(s) and forwards all logs to Logstash.
   filebeat:
     container_name: filebeat
-    image: prima/filebeat
+    image: prima/filebeat:1
     volumes:
       - ./filebeat/filebeat.yml:/filebeat.yml
     restart: always
@@ -27,7 +27,7 @@ services:
   # Aggregates logs and forwards them to Elasticsearch.
   logstash:
     container_name: logstash
-    image: logstash
+    image: logstash:2
     expose:
       - 5044
       - 12201/udp
@@ -52,7 +52,7 @@ services:
   # Logstash configs can be a hassle. Run 'docker-compose run --rm validate-logstash-config' in order to quickly check your logstash config.
   validate-logstash-config:
     container_name: validate-logstash-config
-    image: logstash
+    image: logstash:2
     volumes:
       - ./logstash/config:/config
     command: logstash --configtest --config /config
@@ -62,7 +62,7 @@ services:
   # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
     container_name: elasticsearch
-    image: elasticsearch
+    image: elasticsearch:2
     ports:
       - 9200:9200
     expose:
