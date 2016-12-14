@@ -42,7 +42,7 @@ This suite comes with storage directories for Kibana and Grafana that contain th
 5. Run any containers with the same logging options as defined in this suite's `docker-compose.yml`and add a `container_group` label to enable monitoring, logging and alerting for them.
 6. AFTER you're done testing this suite and you want to revert to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
 
-For debugging: In case you like certain containers to log to stdout because you're having trouble with ELK or simply because it feels more natural to you, you can simply comment out the logging options for individual containers.
+For debugging: In case you would like certain containers to log to `stdout`because you're having trouble with ELK or simply because it feels more natural to you, you can simply comment out the logging options for individual containers. Logs of those containers will go to `stdout` while the logs for all other containers will continue to go to `logstash`.
 
 ```
 #    logging:
