@@ -18,6 +18,8 @@ Alerting: [elastalert](https://github.com/Yelp/elastalert) as a drop-in for Elas
 
 ![alerts_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshot_alerts.png "Alerts Screenshot")
 
+![alerts_screenshot](https://github.com/uschtwill/docker_monitoring_logging/blob/master/screenshots/screenshots_slack_alerts.png "Slack Alerts Screenshot")
+
 WARNING: This configuration is for testing purposes only. As it is simply forwarding ports at the moment, if your box is accessible publicly, all your logs and metrics will be out in the open. Switch off port forwarding before using this in an "online" environment.
 
 The Grafana dashboard (a bit slimmed down) can also be found on grafana.net: [https://grafana.net/dashboards/395](https://grafana.net/dashboards/395).
