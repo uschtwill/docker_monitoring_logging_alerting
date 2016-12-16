@@ -186,6 +186,7 @@ curator:
       - "-web.listen-address=:9090"
       - "-alertmanager.url=http://alertmanager:9093"
       - "-storage.local.memory-chunks=300000"
+      - "-storage.local.retention=744h"
     labels:
       container_group: monitoring
     logging:
