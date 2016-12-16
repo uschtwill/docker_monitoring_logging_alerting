@@ -168,6 +168,7 @@ services:
       - "-web.console.templates=/etc/prometheus/consoles"
       - "-web.listen-address=:9090"
       - "-alertmanager.url=http://alertmanager:9093"
+      - "-storage.local.memory-chunks=300000"
     labels:
       container_group: monitoring
     logging:
