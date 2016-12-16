@@ -25,14 +25,14 @@ scrape_configs:
     scrape_timeout: 5s
     static_configs:
       - targets: ['nodeexporter:9100']
-        labels: {'host': 'Eisbach'}
+        labels: {'host': 'host1'}
 
   - job_name: 'containers'
     scrape_interval: 10s
     scrape_timeout: 5s
     static_configs:
       - targets: ['cadvisor:8080']
-        labels: {'host': 'Eisbach'}
+        labels: {'host': 'host1'}
 
   #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
 
@@ -41,14 +41,14 @@ scrape_configs:
     scrape_timeout: 5s
     static_configs:
       - targets: ['localhost:9090']
-        labels: {'host': 'Eisbach'}
+        labels: {'host': 'host1'}
 
   # - job_name: 'couchdb'
   #   scrape_interval: 10s
   #   scrape_timeout: 5s
   #   static_configs:
   #     - targets: ['couchdbstats:9984']
-  #       labels: {'host': 'Eisbach'}
+  #       labels: {'host': 'host1'}
   # Will/23.08.16: switched of, as I am not sure at this point where the new /_stats endpoint for couchdb 2.0 is. this image is still checking at /_stats and will thus throw non-stop MONITORING SERVICE DOWN alerts. See corresponding entry in monitoring docker-compose.yml.
 
 
