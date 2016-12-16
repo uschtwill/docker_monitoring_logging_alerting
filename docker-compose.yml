@@ -80,6 +80,23 @@ services:
 
 #########################################################
 
+  # Takes care of piling piling up Elasticsearch indices/logs. Can do many other things as well.
+  # Set up a cron or Jenkins job that runs "docker-compose run --rm curator --config /config.yml /action-file.yml" every once in a while.
+curator:
+    image: bobrik/curator
+    volumes:
+      - ./curator/action-file.yml:/action-file.yml
+      - ./curator/config.yml:/config.yml
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.15.0.38:12201
+        labels: container_group
+
+#########################################################
+
   # Pretty frontend to explore and check out all your logs.
   kibana:
     container_name: kibana
