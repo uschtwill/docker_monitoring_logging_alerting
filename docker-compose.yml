@@ -28,7 +28,7 @@ services:
   # Aggregates logs and forwards them to Elasticsearch.
   logstash:
     container_name: logstash
-    image: logstash:2
+    image: logstash:5.1.1
     expose:
       - 5044
       - 12201/udp
@@ -46,7 +46,7 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
-    command: logstash -f /config --auto-reload
+    command: logstash -f /config
 
 #########################################################
 
@@ -56,14 +56,14 @@ services:
     image: logstash:2
     volumes:
       - ./logstash/config:/config
-    command: logstash --configtest --config /config
+    command: logstash -t -f /config
 
 #########################################################
 
   # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
     container_name: elasticsearch
-    image: elasticsearch:2
+    image: elasticsearch:5.1.1
     ports:
       - 9200:9200
     expose:
@@ -78,6 +78,8 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
 
 #########################################################
 
@@ -101,7 +103,7 @@ services:
   # Pretty frontend to explore and check out all your logs.
   kibana:
     container_name: kibana
-    build: kibana/
+    image: kibana:5.1.1
     ports:
       - 5601:5601
     expose:
