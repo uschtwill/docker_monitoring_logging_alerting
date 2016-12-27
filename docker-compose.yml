@@ -13,6 +13,7 @@ services:
     image: prima/filebeat:1
     volumes:
       - ./filebeat/filebeat.yml:/filebeat.yml
+      - /var/log:/host-logs
     restart: always
     labels:
       container_group: monitoring

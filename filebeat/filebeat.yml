@@ -17,10 +17,10 @@ filebeat:
       # For each file found under this path, a harvester is started.
       # Make sure not file is defined twice as this can lead to unexpected behaviour.
       paths:
-        - /var/log/*.log
-        - /var/log/*/*.log
-        - /var/log/*/*/*.log
-        - /var/log/syslog
+        - /host-logs/*.log
+        - /host-logs/*/*.log
+        - /host-logs/*/*/*.log
+        - /host-logs/syslog
       # - c:\programdata\elasticsearch\logs\*
 
       # Configure the file encoding for reading files with international characters
