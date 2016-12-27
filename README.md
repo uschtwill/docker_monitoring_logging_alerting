@@ -68,6 +68,7 @@ The monitoring alerting rules, which are stored in the Prometheus directory, con
 
 If you're annoyed by non-events repeatedly triggering alerts, throw them in ./logstash/config/31-non-events.conf in order for logstash to silence them by overwritting their log_level upon import.
 
+Notice: Since v4.0, Grafana also does alerting - with quite a nice GUI. I haven't tried it yet myself, but I encourage you to look into it: http://docs.grafana.org/guides/whats-new-in-v4/.
 
 ### Grafana/Prometheus Query Building
 
