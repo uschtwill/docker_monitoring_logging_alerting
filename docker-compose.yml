@@ -86,6 +86,7 @@ services:
   # Takes care of piling piling up Elasticsearch indices/logs. Can do many other things as well.
   # Set up a cron or Jenkins job that runs "docker-compose run --rm curator --config /config.yml /action-file.yml" every once in a while.
   curator:
+    container_name: curator
     image: bobrik/curator
     volumes:
       - ./curator/action-file.yml:/action-file.yml
