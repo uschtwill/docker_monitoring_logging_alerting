@@ -1,0 +1,65 @@
+version: '2'
+
+services:
+
+#########################################################
+####                    LOGGING                      ####
+#########################################################
+
+  # Runs on your node(s) and forwards all logs to Logstash.
+  node-filebeat:
+    image: prima/filebeat
+    volumes:
+      - ./logging/filebeat.yml:/filebeat.yml
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+####                   MONITORING                    ####
+#########################################################
+
+  # Runs on your node(s) and forwards node(host) metrics to Prometheus.
+  node-nodeexporter:
+    image: prom/node-exporter
+    expose:
+      - 9100
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Runs on your node(s) and forwards container metrics to Prometheus.
+  node-cadvisor:
+    image: google/cadvisor
+    expose:
+      - 8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+networks:
+  default:
+    external:
+      name: monitoring_logging
