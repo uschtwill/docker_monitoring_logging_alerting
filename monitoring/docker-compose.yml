@@ -1,0 +1,221 @@
+version: '2'
+
+
+services:
+
+#########################################################
+####                   MONITORING                    ####
+#########################################################
+
+  # Runs on your node(s) and forwards node(host) metrics to Prometheus.
+  nodeexporter:
+    container_name: nodeexporter
+    image: prom/node-exporter
+    expose:
+      - 9100
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Runs on your node(s) and forwards container metrics to Prometheus.
+  cadvisor:
+    container_name: cadvisor
+    image: google/cadvisor
+    expose:
+      - 8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Storage and search backend. Gets all metrics from cAdvisor and Nodeexporter and is the backend that Grafana runs on.
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+    volumes:
+      - ./storage/prometheus:/prometheus
+      #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/rules:/etc/prometheus
+    restart: always
+    command:
+      - "-config.file=/etc/prometheus/prometheus.yml"
+      - "-storage.local.path=/prometheus"
+      - "-web.console.libraries=/etc/prometheus/console_libraries"
+      - "-web.console.templates=/etc/prometheus/consoles"
+      - "-web.listen-address=:9090"
+      - "-alertmanager.url=http://alertmanager:9093"
+      - "-storage.local.memory-chunks=300000"
+      - "-storage.local.retention=744h"
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - VIRTUAL_HOST=prometheus.${DOMAIN}
+      - LETSENCRYPT_HOST=prometheus.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+#########################################################
+
+  # Pretty frontend to explore and check out all your metrics.
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - ./storage/grafana:/var/lib/grafana
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${PASSWORD}
+      - VIRTUAL_HOST=grafana.${DOMAIN}
+      - LETSENCRYPT_HOST=grafana.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+#########################################################
+
+  # Alerting plugin wrapping Prometheus and taking care of your metric alerting needs.
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager
+    ports:
+      - 9093:9093
+    expose:
+      - 9093
+    restart: always
+    volumes:
+      - ./monitoring/alertmanager/:/etc/alertmanager/
+      - ./storage/alertmanager/:/alertmanager
+    command:
+      - '-config.file=/etc/alertmanager/config.yml'
+      - '-storage.path=/alertmanager'
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - VIRTUAL_HOST=alertmanager.${DOMAIN}
+      - LETSENCRYPT_HOST=alertmanager.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+#########################################################
+####                   Networking                    ####
+#########################################################
+
+# Extra-network is necessary to have a dedicated IP for Logstash to forwards log to.
+networks:
+  default:
+    external:
+      name: monitoring_logging
+
+#########################################################
+
+  #### Other tools to look into:
+  # topbeat (Metrics for ELK):
+  # collectd (Alternative for metric collection on nodes):
+
+
+  #### Alternative for Prometheus as a datastore:
+  # influxdb:
+  #   container_name: influxdb
+  #   image: influxdb
+  #   expose:
+  #     - 8083
+  #     - 8086
+  #   hostname: influxdb
+  #   # volumes:
+  #   #   - influxdb:/var/lib/influxdb
+  #   restart: always
+  #   labels:
+  #     container_group: monitoring
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: udp://localhost:12201
+  #       labels: monitoring
+
+
+  #### Example for another endpoint for Prometheus:
+  # couchdbstats:
+  # container_name: couchdbstats
+  # image: gesellix/couchdb-exporter
+  # expose:
+  #   - 9984
+  # hostname: couchdbstats
+  # restart: always
+  # labels:
+  #   container_group: monitoring
+  # logging:
+  #   driver: gelf
+  #   options:
+  #     gelf-address: udp://logstash:12201
+  #     labels: container_group
+  # command: -couchdb.uri=http://couchdb:5984
+
+
+  #### Get a free datadog account to have a look at their dashboards for inspiration:
+  #   datadog:
+  #   container_name: datadog
+  #   image: datadog/docker-dd-agent
+  #   hostname: datadog
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /proc/:/host/proc/:ro
+  #     - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+  #   restart: always
+  #   labels:
+  #     container_group: monitoring
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: udp://localhost:12201
+  #       labels: container_group
+  #   environment:
+  #     - API_KEY=
+
+

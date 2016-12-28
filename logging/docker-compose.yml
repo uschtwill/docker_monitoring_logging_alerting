@@ -1,0 +1,190 @@
+version: '2'
+
+
+services:
+
+#########################################################
+####                    LOGGING                      ####
+#########################################################
+
+  # Runs on your node(s) and forwards all logs to Logstash.
+  filebeat:
+    container_name: filebeat
+    image: prima/filebeat:1
+    volumes:
+      - ./logging/filebeat/filebeat.yml:/filebeat.yml
+      - /var/log:/host-logs
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Aggregates logs and forwards them to Elasticsearch.
+  logstash:
+    container_name: logstash
+    image: logstash:5.1.1
+    expose:
+      - 5044
+      - 12201/udp
+    volumes:
+      - ./logging/logstash/config:/config
+      - ./logging/logstash/patterns:/opt/logstash/extra_patterns
+    restart: always
+    labels:
+      container_group: monitoring
+    networks:
+      default:
+        ipv4_address: 192.16.0.38
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    command: logstash -f /config
+
+#########################################################
+
+  # Logstash configs can be a hassle. Run 'docker-compose run --rm validate-logstash-config' in order to quickly check your logstash config.
+  validate-logstash-config:
+    container_name: validate-logstash-config
+    image: logstash:2
+    volumes:
+      - ./logstash/config:/config
+    command: logstash -t -f /config
+
+#########################################################
+
+  # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:5.1.1
+    ports:
+      - 9200:9200
+    expose:
+      - 9200
+    volumes:
+      - ./storage/elasticsearch:/usr/share/elasticsearch/data
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+
+#########################################################
+
+  # Takes care of piling piling up Elasticsearch indices/logs. Can do many other things as well.
+  # Set up a cron or Jenkins job that runs "docker-compose run --rm curator --config /config.yml /action-file.yml" every once in a while.
+  curator:
+    container_name: curator
+    image: bobrik/curator
+    volumes:
+      - ./logging/curator/action-file.yml:/action-file.yml
+      - ./logging/curator/config.yml:/config.yml
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.15.0.38:12201
+        labels: container_group
+
+#########################################################
+
+  # Pretty frontend to explore and check out all your logs.
+  kibana:
+    container_name: kibana
+    image: kibana:5.1.1
+    ports:
+      - 5601:5601
+    expose:
+      - 5601
+    volumes:
+      - ./logging/kibana/config/:/opt/kibana/config/
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=200 # fixes memory leak (https://github.com/elastic/kibana/issues/5170)
+      - VIRTUAL_HOST=kibana.${DOMAIN}
+      - LETSENCRYPT_HOST=kibana.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+#########################################################
+
+  # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
+  elastalert:
+    container_name: elastalert
+    build: logging/elastalert/
+    restart: always
+    volumes:
+      - ./logging/elastalert/log:/opt/log
+      - ./logging/elastalert/config:/opt/config
+      - ./logging/elastalert/rules:/opt/rules
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+    links:
+      - elasticsearch:elasticsearch_host
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://192.16.0.38:12201
+        labels: container_group
+
+#########################################################
+####                   Networking                    ####
+#########################################################
+
+# Extra-network is necessary to have a dedicated IP for Logstash to forwards log to.
+networks:
+  default:
+    external:
+      name: monitoring_logging
+
+#########################################################
+
+  # watcher (ELK):
+  # fluentd (Logstash alternative) :
+  # topbeat (Metrics for ELK):
+
+
+  #### Get a free datadog account to have a look at their dashboards for inspiration:
+  #   datadog:
+  #   container_name: datadog
+  #   image: datadog/docker-dd-agent
+  #   hostname: datadog
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /proc/:/host/proc/:ro
+  #     - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+  #   restart: always
+  #   labels:
+  #     container_group: monitoring
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: udp://localhost:12201
+  #       labels: container_group
+  #   environment:
+  #     - API_KEY=
+
+

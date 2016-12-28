@@ -14,13 +14,13 @@ echo --------------------------- Creating separate docker network...
 docker network create --subnet=192.16.0.0/24 monitoring_logging
 
 echo --------------------------- Pulling images...
-docker-compose pull
+docker-compose -f docker-compose.yml -f proxy/docker-compose.yml -f logging/docker-compose.yml -f monitoring/docker-compose.yml pull
 
 echo --------------------------- Building images...
-docker-compose build
+docker-compose -f docker-compose.yml -f proxy/docker-compose.yml -f logging/docker-compose.yml -f monitoring/docker-compose.yml build
 
 echo --------------------------- Starting containers...
-docker-compose up --force-recreate
+docker-compose -f docker-compose.yml -f proxy/docker-compose.yml -f logging/docker-compose.yml -f monitoring/docker-compose.yml up --force-recreate
 
 echo --------------------------- Unsetting exported environment variables...
 unset DOMAIN
@@ -28,3 +28,5 @@ unset PASSWORD
 
 echo --------------------------- Output from 'docker ps'...
 docker ps
+
+echo ---------------------------
