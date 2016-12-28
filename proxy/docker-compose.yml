@@ -8,7 +8,6 @@ services:
 ########################################################
 
   nginx-proxy:
-    container_name: nginx-proxy
     image: nginx
     restart: always
     ports:
@@ -31,7 +30,6 @@ services:
 #########################################################
 
   nginx-gen:
-    container_name: nginx-gen
     image: jwilder/docker-gen
     restart: always
     volumes_from:
@@ -53,7 +51,6 @@ services:
 #########################################################
 
   nginx-letsencrypt:
-    container_name: nginx-letsencrypt
     # image: jrcs/letsencrypt-nginx-proxy-companion
     image: alastaircoote/docker-letsencrypt-nginx-proxy-companion # Implements fix for above, change back as soon as fixed in original repo, maybe after new years? See https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/130
     restart: always

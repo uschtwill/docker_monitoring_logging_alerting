@@ -8,8 +8,7 @@ services:
 #########################################################
 
   # Runs on your node(s) and forwards all logs to Logstash.
-  filebeat:
-    container_name: filebeat
+  master-filebeat:
     image: prima/filebeat:1
     volumes:
       - ./logging/filebeat/filebeat.yml:/filebeat.yml
@@ -27,7 +26,6 @@ services:
 
   # Aggregates logs and forwards them to Elasticsearch.
   logstash:
-    container_name: logstash
     image: logstash:5.1.1
     expose:
       - 5044
@@ -52,7 +50,6 @@ services:
 
   # Logstash configs can be a hassle. Run 'docker-compose run --rm validate-logstash-config' in order to quickly check your logstash config.
   validate-logstash-config:
-    container_name: validate-logstash-config
     image: logstash:2
     volumes:
       - ./logstash/config:/config
@@ -62,7 +59,6 @@ services:
 
   # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
-    container_name: elasticsearch
     image: elasticsearch:5.1.1
     ports:
       - 9200:9200
@@ -86,7 +82,6 @@ services:
   # Takes care of piling piling up Elasticsearch indices/logs. Can do many other things as well.
   # Set up a cron or Jenkins job that runs "docker-compose run --rm curator --config /config.yml /action-file.yml" every once in a while.
   curator:
-    container_name: curator
     image: bobrik/curator
     volumes:
       - ./logging/curator/action-file.yml:/action-file.yml
@@ -103,7 +98,6 @@ services:
 
   # Pretty frontend to explore and check out all your logs.
   kibana:
-    container_name: kibana
     image: kibana:5.1.1
     ports:
       - 5601:5601
@@ -131,7 +125,6 @@ services:
 
   # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
   elastalert:
-    container_name: elastalert
     build: logging/elastalert/
     restart: always
     volumes:
