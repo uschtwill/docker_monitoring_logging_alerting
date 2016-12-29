@@ -72,6 +72,8 @@ This suite comes with storage directories for Kibana and Grafana that contain th
 
 ##### Notice: Grafana 4.x does not yet support Elasticsearch 5.x as a datastore for annotations. Therefore annotations currently do not work. The situation will be fixed with 4.1, see: https://github.com/grafana/grafana/pull/4970
 
+##### Notice: Elastalert does not yet support Elasticsearch 5.x . Therefore it is currently switched off. The situation will be fixed as soon as Elastalert comes clean, see: https://github.com/Yelp/elastalert/issues/790
+
 This suite uses elastalert and Alertmanager for alerting. Rules for logging alerts (elastalert) go into ./elastalert/rules/ and rules for monitoring alerts (Alertmanager) go into ./prometheus/rules/. Alertmanager only takes care of the communications part the monitoring alerts, the rules themselves are defined "in" Prometheus.
 
 Both Alertmanager and elastalert can be configured to send their alerts to various outputs. In this suite, Logstash and Slack are set up. The integration with Logstash works out of the box, for adding Slack you will need to insert your webhook url.
