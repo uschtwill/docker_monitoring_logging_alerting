@@ -1,0 +1,53 @@
+version: '2'
+
+
+services:
+
+  master-nodeexporter:
+    extends:
+      file: docker-compose.yml
+      service: master-nodeexporter
+
+  master-cadvisor:
+    extends:
+      file: docker-compose.yml
+      service: master-cadvisor
+
+  prometheus:
+    extends:
+      file: docker-compose.yml
+      service: prometheus
+    environment:
+      - VIRTUAL_HOST=prometheus.${DOMAIN}
+      - LETSENCRYPT_HOST=prometheus.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+  grafana:
+    extends:
+      file: docker-compose.yml
+      service: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${PASSWORD}
+      - VIRTUAL_HOST=grafana.${DOMAIN}
+      - LETSENCRYPT_HOST=grafana.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+  alertmanager:
+    extends:
+      file: docker-compose.yml
+      service: alertmanager
+    environment:
+      - VIRTUAL_HOST=alertmanager.${DOMAIN}
+      - LETSENCRYPT_HOST=alertmanager.${DOMAIN}
+      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
+      - LETSENCRYPT_TEST=false
+      - HTTPS_METHOD=nohttp
+
+networks:
+  default:
+    external:
+      name: monitoring_logging

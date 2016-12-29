@@ -1,0 +1,46 @@
+version: '2'
+
+
+services:
+
+  master-filebeat:
+    extends:
+      file: docker-compose.yml
+      service: master-filebeat
+
+  logstash:
+    extends:
+      file: docker-compose.yml
+      service: logstash
+
+  validate-logstash-config:
+    extends:
+      file: docker-compose.yml
+      service: validate-logstash-config
+
+  elasticsearch:
+    extends:
+      file: docker-compose.yml
+      service: elasticsearch
+    ports:
+      - 9200:9200
+
+  curator:
+    extends:
+      file: docker-compose.yml
+      service: curator
+
+  kibana:
+    extends:
+      file: docker-compose.yml
+      service: kibana
+    ports:
+      - 5601:5601
+
+networks:
+  default:
+    external:
+      name: monitoring_logging
+
+
+

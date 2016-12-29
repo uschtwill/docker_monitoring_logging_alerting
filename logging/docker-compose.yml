@@ -15,7 +15,7 @@ services:
       - /var/log:/host-logs
     restart: always
     labels:
-      container_group: monitoring
+      container_group: logging
     logging:
       driver: gelf
       options:
@@ -31,11 +31,11 @@ services:
       - 5044
       - 12201/udp
     volumes:
-      - ./logging/logstash/config:/config
-      - ./logging/logstash/patterns:/opt/logstash/extra_patterns
+      - ./logstash/config:/config
+      - ./logstash/patterns:/opt/logstash/extra_patterns
     restart: always
     labels:
-      container_group: monitoring
+      container_group: logging
     networks:
       default:
         ipv4_address: 192.16.0.38
@@ -60,15 +60,13 @@ services:
   # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
     image: elasticsearch:5.1.1
-    ports:
-      - 9200:9200
     expose:
       - 9200
     volumes:
-      - ./storage/elasticsearch:/usr/share/elasticsearch/data
+      - ../storage/elasticsearch:/usr/share/elasticsearch/data
     restart: always
     labels:
-      container_group: monitoring
+      container_group: logging
     logging:
       driver: gelf
       options:
@@ -84,10 +82,10 @@ services:
   curator:
     image: bobrik/curator
     volumes:
-      - ./logging/curator/action-file.yml:/action-file.yml
-      - ./logging/curator/config.yml:/config.yml
+      - ./curator/action-file.yml:/action-file.yml
+      - ./curator/config.yml:/config.yml
     labels:
-      container_group: monitoring
+      container_group: logging
     logging:
       driver: gelf
       options:
@@ -99,15 +97,13 @@ services:
   # Pretty frontend to explore and check out all your logs.
   kibana:
     image: kibana:5.1.1
-    ports:
-      - 5601:5601
     expose:
       - 5601
     volumes:
-      - ./logging/kibana/config/:/opt/kibana/config/
+      - ./kibana/config/:/opt/kibana/config/
     restart: always
     labels:
-      container_group: monitoring
+      container_group: logging
     logging:
       driver: gelf
       options:
@@ -115,11 +111,6 @@ services:
         labels: container_group
     environment:
       - NODE_OPTIONS=--max-old-space-size=200 # fixes memory leak (https://github.com/elastic/kibana/issues/5170)
-      - VIRTUAL_HOST=kibana.${DOMAIN}
-      - LETSENCRYPT_HOST=kibana.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
 
 #########################################################
 

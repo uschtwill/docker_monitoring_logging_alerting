@@ -31,7 +31,11 @@ This suite comes with storage directories for Kibana and Grafana that contain th
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging_alerting.git`
 2. `cd` into the folder: `cd docker_monitoring_logging_alerting`
-3. Run the setup script: `sh setup.sh`
+3. Check out the prerequisites in `install-prerequistes.sh` and make sure they're fulfilled.
+3. Run the setup script `setup.sh`.
+
+#### In `unsecure` mode: `sh setup.sh unsecure`
+
 4. Enjoy and explore your logs and metrics:
   * To explore your logs: <a href="http://localhost:5601/app/kibana#/discover" target="_blank">localhost:5601/app/kibana#/discover</a>.
   - To explore your logging metrics: <a href="http://localhost:5601/app/kibana#/dashboard/Exploration" target="_blank">localhost:5601/app/kibana#/dashboard/Exploration</a>.
@@ -42,9 +46,19 @@ This suite comes with storage directories for Kibana and Grafana that contain th
   * Just to see what the cAdvisor frontend  looks like (you'll use Grafana for looking at monitoring metrics anyways): <a href="http://localhost:8080/containers/" target="_blank">localhost:8080/containers/</a>
   * To say hello to your Elasticsearch instance: `curl localhost:9200`.
 5. Run any containers with the same logging options as defined in this suite's `docker-compose.yml`and add a `container_group` label to enable monitoring, logging and alerting for them.
-6. AFTER you're done testing this suite and you want to revert to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh`
+6. AFTER you're done testing this suite and you want to revert to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh unsecure`.
 
-For debugging: In case you would like certain containers to log to `stdout`because you're having trouble with ELK or simply because it feels more natural to you, you can simply comment out the logging options for individual containers. Logs of those containers will go to `stdout` while the logs for all other containers will continue to go to `logstash`.
+#### In `secure` mode: `sh setup.sh secure YOUR_DOMAIN VERY_STRONG_PASSWORD`
+
+4. Create subdomain A-record DNS entries for grafana.DOMAIN, kibana.DOMAIN, prometheus.DOMAIN and alertmanager.DOMAIN that point at the host that is going to run the suite (DOMAIN being your domain).
+4. Provided with your domain and a very strong password, `sh setup.sh secure YOUR_DOMAIN VERY_STRONG_PASSWORD` will set up the suite in secure mode, effectively:
+  * running it with an nginx reverse proxy in front of it.
+  * cutting out all container-forwarding nonsense.
+  * downloading SSL certificates and keeping them up to date.
+  * providing basic auth for all dashboards and locking them down with HTTPS(-only).
+  * exposing dashboards at https://grafana.DOMAIN, https://kibana.DOMAIN, https://prometheus.DOMAIN and https://alertmanager.DOMAIN.
+5. Run any containers with the same logging options as defined in this suite's `docker-compose.yml`and add a `container_group` label to enable monitoring, logging and alerting for them.
+6. AFTER you're done testing this suite and you want to revert to the state before setting up, run the cleanup script to clean up after yourself: `sh cleanup.sh sesecure`.
 
 ```
 #    logging:

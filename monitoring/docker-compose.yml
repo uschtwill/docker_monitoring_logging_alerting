@@ -47,15 +47,13 @@ services:
   # Storage and search backend. Gets all metrics from cAdvisor and Nodeexporter and is the backend that Grafana runs on.
   prometheus:
     image: prom/prometheus
-    ports:
-      - 9090:9090
     expose:
       - 9090
     volumes:
-      - ./storage/prometheus:/prometheus
+      - ../storage/prometheus:/prometheus
       #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./monitoring/prometheus/rules:/etc/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules:/etc/prometheus
     restart: always
     command:
       - "-config.file=/etc/prometheus/prometheus.yml"
@@ -73,24 +71,16 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
-    environment:
-      - VIRTUAL_HOST=prometheus.${DOMAIN}
-      - LETSENCRYPT_HOST=prometheus.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
 
 #########################################################
 
   # Pretty frontend to explore and check out all your metrics.
   grafana:
     image: grafana/grafana
-    ports:
-      - 3000:3000
     expose:
       - 3000
     volumes:
-      - ./storage/grafana:/var/lib/grafana
+      - ../storage/grafana:/var/lib/grafana
     restart: always
     labels:
       container_group: monitoring
@@ -101,26 +91,18 @@ services:
         labels: container_group
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=${PASSWORD}
-      - VIRTUAL_HOST=grafana.${DOMAIN}
-      - LETSENCRYPT_HOST=grafana.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
 
 #########################################################
 
   # Alerting plugin wrapping Prometheus and taking care of your metric alerting needs.
   alertmanager:
     image: prom/alertmanager
-    ports:
-      - 9093:9093
     expose:
       - 9093
     restart: always
     volumes:
-      - ./monitoring/alertmanager/:/etc/alertmanager/
-      - ./storage/alertmanager/:/alertmanager
+      - ./alertmanager/:/etc/alertmanager/
+      - ../storage/alertmanager/:/alertmanager
     command:
       - '-config.file=/etc/alertmanager/config.yml'
       - '-storage.path=/alertmanager'
@@ -131,12 +113,6 @@ services:
       options:
         gelf-address: udp://192.16.0.38:12201
         labels: container_group
-    environment:
-      - VIRTUAL_HOST=alertmanager.${DOMAIN}
-      - LETSENCRYPT_HOST=alertmanager.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
 
 #########################################################
 ####                   Networking                    ####
