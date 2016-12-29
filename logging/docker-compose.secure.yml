@@ -39,6 +39,11 @@ services:
       - LETSENCRYPT_TEST=false
       - HTTPS_METHOD=nohttp
 
+  # elastalert:
+  #   extends:
+  #     file: docker-compose.yml
+  #     service: elastalert
+
 networks:
   default:
     external:

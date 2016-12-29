@@ -37,6 +37,11 @@ services:
     ports:
       - 5601:5601
 
+  # elastalert:
+  #   extends:
+  #     file: docker-compose.yml
+  #     service: elastalert
+
 networks:
   default:
     external:
