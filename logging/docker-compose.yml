@@ -11,7 +11,7 @@ services:
   master-filebeat:
     image: prima/filebeat:1
     volumes:
-      - ./logging/filebeat/filebeat.yml:/filebeat.yml
+      - ./filebeat/filebeat.yml:/filebeat.yml
       - /var/log:/host-logs
     restart: always
     labels:
