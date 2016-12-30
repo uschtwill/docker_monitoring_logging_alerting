@@ -1,3 +1,0 @@
-version: '2'
-
-# This is just a dummy docker-compose.yml to have a common context for the other docker-compose.ymls called in setup.sh.

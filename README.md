@@ -77,6 +77,8 @@ For debugging: In case you would like certain containers to log to `stdout`becau
 
 ##### Notice: Elastalert does not yet support Elasticsearch 5.x. Therefore elastalert is currently switched off. This situation will be remedied as soon as Elastalert falls in line. See: https://github.com/Yelp/elastalert/issues/790
 
+##### Notice: Since v4.0, Grafana also does alerting - with quite a nice GUI. I haven't tried it yet myself, but I encourage you to look into it: http://docs.grafana.org/guides/whats-new-in-v4/.
+
 This suite uses elastalert and Alertmanager for alerting. Rules for logging alerts (elastalert) go into ./elastalert/rules/ and rules for monitoring alerts (Alertmanager) go into ./prometheus/rules/. Alertmanager only takes care of the communications part the monitoring alerts, the rules themselves are defined "in" Prometheus.
 
 Both Alertmanager and elastalert can be configured to send their alerts to various outputs. In this suite, Logstash and Slack are set up. The integration with Logstash works out of the box, for adding Slack you will need to insert your webhook url.
@@ -89,7 +91,6 @@ The monitoring alerting rules, which are stored in the Prometheus directory, con
 
 If you're annoyed by non-events repeatedly triggering alerts, throw them in ./logstash/config/31-non-events.conf in order for logstash to silence them by overwritting their log_level upon import.
 
-Notice: Since v4.0, Grafana also does alerting - with quite a nice GUI. I haven't tried it yet myself, but I encourage you to look into it: http://docs.grafana.org/guides/whats-new-in-v4/.
 
 ### Grafana/Prometheus Query Building
 

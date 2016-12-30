@@ -10,7 +10,7 @@ services:
   node-filebeat:
     image: prima/filebeat
     volumes:
-      - ./logging/filebeat.yml:/filebeat.yml
+      - ../logging/filebeat.yml:/filebeat.yml
     restart: always
     labels:
       container_group: monitoring
