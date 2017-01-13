@@ -38,7 +38,7 @@ services:
       container_group: logging
     networks:
       default:
-        ipv4_address: 192.16.0.38
+        ipv4_address: 172.16.0.38
     logging:
       driver: gelf
       options:
