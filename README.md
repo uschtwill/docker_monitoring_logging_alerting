@@ -32,7 +32,7 @@ This repository comes with storage directories for Kibana and Grafana that conta
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging_alerting.git`
 2. `cd` into the folder: `cd docker_monitoring_logging_alerting`
-3. Check out the prerequisites in [`install-prerequistes.sh`](https://github.com/uschtwill/docker_monitoring_logging_alerting/blob/master/install-prerequisites.sh) and make sure they're fulfilled (or just run the script if the host is a fresh machine).
+3. Check out the prerequisites in [`install-prerequisites.sh`](https://github.com/uschtwill/docker_monitoring_logging_alerting/blob/master/install-prerequisites.sh) and make sure they're fulfilled (or just run the script if the host is a fresh machine).
 4. Run the setup script `setup.sh`.
 
 #### For `secure` mode run `sh setup.sh secure YOUR_DOMAIN VERY_STRONG_PASSWORD`
