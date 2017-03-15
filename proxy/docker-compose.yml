@@ -52,7 +52,7 @@ services:
 #########################################################
 
   nginx-letsencrypt:
-    image: jrcs/docker-letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion
     restart: always
     volumes_from:
       - nginx-proxy
