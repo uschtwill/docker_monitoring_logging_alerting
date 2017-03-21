@@ -67,7 +67,7 @@ For debugging: In case you would like certain containers to log to `stdout`becau
 #    logging:
 #      driver: gelf
 #      options:
-#        gelf-address: udp://192.16.0.38:12201
+#        gelf-address: udp://172.16.0.38:12201
 #        labels: container_group
 ```
 
