@@ -74,7 +74,7 @@ services:
         gelf-address: udp://172.16.0.38:12201
         labels: container_group
     networks:
-      monitoring_logging:
+      default:
         aliases:
           - elasticsearchhost # Required for elastalert.
     environment:
