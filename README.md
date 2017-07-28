@@ -73,10 +73,6 @@ For debugging: In case you would like certain containers to log to `stdout`becau
 
 ### Alerting and Annotations in Grafana
 
-##### Notice: Grafana 4.x does not yet support Elasticsearch 5.x as a datastore for annotations. Therefore annotations currently do not work. The situation will be fixed with 4.1. See: https://github.com/grafana/grafana/pull/4970
-
-##### Notice: Elastalert does not yet support Elasticsearch 5.x. Therefore elastalert is currently switched off. This situation will be remedied as soon as Elastalert falls in line. See: https://github.com/Yelp/elastalert/issues/790
-
 ##### Notice: Since v4.0, Grafana also does alerting - with quite a nice GUI. I haven't tried it yet myself, but I encourage you to look into it: http://docs.grafana.org/guides/whats-new-in-v4/.
 
 This suite uses elastalert and Alertmanager for alerting. Rules for logging alerts (elastalert) go into ./elastalert/rules/ and rules for monitoring alerts (Alertmanager) go into ./prometheus/rules/. Alertmanager only takes care of the communications part the monitoring alerts, the rules themselves are defined "in" Prometheus.
