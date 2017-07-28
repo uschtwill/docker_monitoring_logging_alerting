@@ -24,14 +24,14 @@ scrape_configs:
     scrape_interval: 10s
     scrape_timeout: 5s
     static_configs:
-      - targets: ['nodeexporter:9100']
+      - targets: ['master-nodeexporter:9100']
         labels: {'host': 'host1'}
 
   - job_name: 'containers'
     scrape_interval: 10s
     scrape_timeout: 5s
     static_configs:
-      - targets: ['cadvisor:8080']
+      - targets: ['master-cadvisor:8080']
         labels: {'host': 'host1'}
 
   #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
