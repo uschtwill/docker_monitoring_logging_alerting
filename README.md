@@ -1,3 +1,5 @@
+#### Please let me know, if something is broken, so I can fix it!
+
 If you have any feedback regarding this monitoring/logging/alerting suite, any ideas for improvement, fixes, questions or comments, please feel free to contact me or do a PR!
 
 ### What is this?
