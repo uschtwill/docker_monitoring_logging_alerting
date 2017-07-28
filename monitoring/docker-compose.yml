@@ -9,7 +9,7 @@ services:
 
   # Runs on your node(s) and forwards node(host) metrics to Prometheus.
   master-nodeexporter:
-    image: prom/node-exporter
+    image: prom/node-exporter:v0.14.0
     expose:
       - 9100
     restart: always
@@ -25,7 +25,7 @@ services:
 
   # Runs on your node(s) and forwards container metrics to Prometheus.
   master-cadvisor:
-    image: google/cadvisor
+    image: google/cadvisor:v0.25.0
     expose:
       - 8080
     volumes:
@@ -46,7 +46,7 @@ services:
 
   # Storage and search backend. Gets all metrics from cAdvisor and Nodeexporter and is the backend that Grafana runs on.
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v1.7.1
     expose:
       - 9090
     volumes:
@@ -76,7 +76,7 @@ services:
 
   # Pretty frontend to explore and check out all your metrics.
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:4.4.1
     expose:
       - 3000
     volumes:
@@ -96,7 +96,7 @@ services:
 
   # Alerting plugin wrapping Prometheus and taking care of your metric alerting needs.
   alertmanager:
-    image: prom/alertmanager
+    image: prom/alertmanager:v0.8.0
     expose:
       - 9093
     restart: always
