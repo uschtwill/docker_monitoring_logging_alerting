@@ -6,15 +6,14 @@
 es_host: elasticsearch
 es_port: 9200
 name: Part of the System is Acting up (blanket log_level catch)
-index: logstash-logs
+index: logstash-logs*
 
 
 type: any
 
 
 filter:
-- query:
-    query_string:
+  - query_string:
       query: "log_level:CRIT OR log_level: CRITICAL OR log_level:WARN OR log_level: WARNING OR log_level: ERROR OR log_level: FATAL"
 
 

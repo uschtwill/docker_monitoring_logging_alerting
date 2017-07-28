@@ -3,7 +3,7 @@
 es_host: elasticsearch
 es_port: 9200
 name: Blue Print for ELK Alerts
-index: logstash-logs
+index: logstash-logs*
 
 
 type: any
@@ -12,9 +12,8 @@ type: any
 
 
 # filter:
-# - query:
-#     query_string:
-#       query: "log_level:CRIT OR log_level: CRITICAL OR log_level:WARN OR log_level: WARNING OR log_level: ERROR OR log_level: ERR OR log_level: FATAL"
+# - query_string:
+#     query: "log_level:CRIT OR log_level: CRITICAL OR log_level:WARN OR log_level: WARNING OR log_level: ERROR OR log_level: ERR OR log_level: FATAL"
 
 
 
