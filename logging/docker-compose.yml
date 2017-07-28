@@ -73,6 +73,10 @@ services:
       options:
         gelf-address: udp://172.16.0.38:12201
         labels: container_group
+    networks:
+      monitoring_logging:
+        aliases:
+          - elasticsearchhost # Required for elastalert.
     environment:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
 
@@ -115,23 +119,23 @@ services:
 
 #########################################################
 
-  # # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
-  # elastalert:
-  #   build: elastalert/
-  #   restart: always
-  #   volumes:
-  #     - ./elastalert/log:/opt/log
-  #     - ./elastalert/config:/opt/config
-  #     - ./elastalert/rules:/opt/rules
-  #   environment:
-  #     - ELASTICSEARCH_HOST=elasticsearch
-  #   labels:
-  #     container_group: monitoring
-  #   # logging:
-  #   #   driver: gelf
-  #   #   options:
-  #   #     gelf-address: udp://172.16.0.38:12201
-  #   #     labels: container_group
+  # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
+  elastalert:
+    build: elastalert/
+    restart: always
+    volumes:
+      - ./elastalert/log:/opt/log
+      - ./elastalert/config:/opt/config
+      - ./elastalert/rules:/opt/rules
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
 
 #########################################################
 ####                   Networking                    ####
