@@ -52,7 +52,10 @@ services:
     volumes:
       - ../storage/prometheus:/prometheus
       #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
+      #Qyao/07.10.17: curl -X POST http://localhost:9090/-/reload to reload config
+      # it will be safe to mount ./prometheus folder in recent prometheus image  
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/service.yml:/etc/prometheus/service.yml
       - ./prometheus/rules:/etc/prometheus
     restart: always
     command:
@@ -120,7 +123,7 @@ services:
     hostname: blackboxprober
     image: prom/blackbox-exporter
     volumes:
-      - ./blackbox_exporter/config.yml:/etc/blackbox_exporter/config.yml
+      - ./blackboxprober:/etc/blackbox_exporter
     ports:
       - 9115:9115
     restart: always
