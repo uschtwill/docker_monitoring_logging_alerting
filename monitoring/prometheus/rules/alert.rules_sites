@@ -1,0 +1,9 @@
+ALERT service_endpoint_down
+  IF probe_success{job='service'} == 0
+  FOR 3m
+  LABELS { severity = "Critical" }
+  ANNOTATIONS {
+      summary = "ENGOPS SERVICE NON-OPERATIONAL",
+      description = "Service {{ $labels.service_name }} with endpoint {{ $labels.service_url }} is not reachable. Please check whether the instance is running",
+  }
+

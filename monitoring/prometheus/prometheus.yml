@@ -11,9 +11,10 @@ global:
 
 # Load and evaluate rules in this file every  gc'evaluation_interval' seconds.
 rule_files:
-  - "alert.rules_nodes"
-  - "alert.rules_containers"
-  - "alert.rules_container-groups"
+  - "rules/alert.rules_nodes"
+  - "rules/alert.rules_containers"
+  - "rules/alert.rules_container-groups"
+  - "rules/alert.rules_sites"
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
