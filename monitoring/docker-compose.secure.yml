@@ -24,6 +24,11 @@ services:
       - LETSENCRYPT_TEST=false
       - HTTPS_METHOD=nohttp
 
+  blackboxprober:
+    extends:
+      file: docker-compose.yml
+      service: blackboxprober
+
   grafana:
     extends:
       file: docker-compose.yml

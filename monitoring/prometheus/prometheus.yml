@@ -43,6 +43,34 @@ scrape_configs:
       - targets: ['localhost:9090']
         labels: {'host': 'host1'}
 
+  # see https://github.com/prometheus/blackbox_exporter relabel 
+  - job_name: 'service'
+    scrape_interval: 60s
+    scrape_timeout: 15s
+    metrics_path: /probe
+    # if your target is https, you either need to install cert in blackbox proble container
+    # or add below line to ignore verify
+    # tls_config:
+    #  insecure_skip_verify: true
+    params:
+      module: [http_2xx]  # Look for a HTTP 200 response. 
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/service.yml
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*)
+        target_label: __param_target
+        replacement: ${1}
+      - source_labels: [__address__]
+        regex: (.*)
+        target_label: service_url
+        replacement: ${1}
+      - source_labels: []
+        regex: .*
+        target_label: __address__
+        replacement: blackboxprober:9115
+
   # - job_name: 'couchdb'
   #   scrape_interval: 10s
   #   scrape_timeout: 5s

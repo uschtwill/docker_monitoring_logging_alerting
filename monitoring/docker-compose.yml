@@ -115,6 +115,24 @@ services:
         labels: container_group
 
 #########################################################
+  blackboxprober:
+    container_name: blackboxprober
+    hostname: blackboxprober
+    image: prom/blackbox-exporter
+    volumes:
+      - ./blackbox_exporter/config.yml:/etc/blackbox_exporter/config.yml
+    ports:
+      - 9115:9115
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
+
+#########################################################
 ####                   Networking                    ####
 #########################################################
 
