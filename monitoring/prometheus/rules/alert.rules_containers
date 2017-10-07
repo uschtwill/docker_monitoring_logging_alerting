@@ -30,3 +30,16 @@ ALERT container_eating_memory
       summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
       description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
   }
+
+
+ALERT container_down
+IF (absent(container_memory_usage_bytes{name="monitoring_elasticsearch_1"})
+  or absent(container_memory_usage_bytes{name="monitoring_prometheus_1"}) 
+  )
+  FOR 5m
+  LABELS { severity = "Critical" }
+  ANNOTATIONS {
+    summary= "CONTAINER '{{ $labels.name }}' down",
+    description =  "container with  name '{{ $labels.name }}' is down for more than 5 minutes"
+  }
+
