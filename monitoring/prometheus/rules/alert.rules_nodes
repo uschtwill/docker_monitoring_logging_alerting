@@ -31,8 +31,23 @@ ALERT node_running_out_of_disk_space
       description = "Less than 40GB of free disk space. Free disk space at {{ humanize $value }} GB.",
   }
 
+ALERT node_low_disk_space
+  IF 100 * min(node_filesystem_avail/node_filesystem_size{mountpoint=~"/etc/hostname|^/mnt.*|^/data.*"}) by (device, fstype, host, instance, job) < 10.0
+  FOR 5m
+  LABELS { severity = "Warning" }
+  ANNOTATIONS {
+      summary = "LOW DISK SPACE WARING: NODE '{{ $labels.host }}'",
+      description = "Warning, node '{{ $labels.host }}' has less than 10% of free disk space on device {{ $labels.device }} with mount point {{ $labels.mountpoint }}. Available disk space at {{ humanize $value }}%",
+  }
 
-
+ALERT node_restarted
+  IF node_time - node_boot_time < 300
+  FOR 1m
+  LABELS { severity = "Warning" }
+  ANNOTATIONS {
+      summary = "NODE RESTARTED WARNING: NODE '{{ $labels.host }}'",
+      description = "Warning: Node '{{ $labels.host }}' was restarted at {{ $value }} seconds ago.",
+  }
 
 ################################### TEST ALERT
 
