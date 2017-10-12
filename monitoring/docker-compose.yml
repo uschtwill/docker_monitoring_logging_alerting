@@ -117,9 +117,7 @@ services:
 
 #########################################################
   blackboxprober:
-    container_name: blackboxprober
-    hostname: blackboxprober
-    image: prom/blackbox-exporter
+    image: prom/blackbox-exporter:v0.10.0
     volumes:
       - ./blackboxprober:/etc/blackbox_exporter
     ports:
