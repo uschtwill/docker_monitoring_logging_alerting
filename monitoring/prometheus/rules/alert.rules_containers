@@ -8,7 +8,7 @@ ALERT high_cpu_usage_on_container
   }
 
 ALERT elasticsearch_eating_memory
-  IF sum(container_memory_rss{name=~"monitoring_elasticsearch_1"}) by (host, name) > 1200000000
+  IF sum(container_memory_rss{name=~"logging_elasticsearch_1"}) by (host, name) > 1200000000
   FOR 5m
   ANNOTATIONS {
       summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
@@ -24,7 +24,7 @@ ALERT prometheus_eating_memory
   }
 
 ALERT container_eating_memory
-  IF sum(container_memory_rss{name=~".+",name!="monitoring_elasticsearch_1",name!="monitoring_prometheus_1"}) by (host,name) > 700000000
+  IF sum(container_memory_rss{name=~".+",name!="logging_elasticsearch_1",name!="monitoring_prometheus_1"}) by (host,name) > 700000000
   FOR 5m
   ANNOTATIONS {
       summary = "HIGH MEMORY USAGE WARNING: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
@@ -33,7 +33,7 @@ ALERT container_eating_memory
 
 
 ALERT container_down
-IF (absent(container_memory_usage_bytes{name="monitoring_elasticsearch_1"})
+IF (absent(container_memory_usage_bytes{name="logging_elasticsearch_1"})
   or absent(container_memory_usage_bytes{name="monitoring_prometheus_1"}) 
   )
   FOR 5m

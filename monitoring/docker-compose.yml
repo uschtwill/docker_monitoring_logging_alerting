@@ -52,8 +52,9 @@ services:
     volumes:
       - ../storage/prometheus:/prometheus
       #Will/23.08.16: dcom restart prometheus suffices to load config/rule changes
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./prometheus/rules:/etc/prometheus
+      #Qyao/07.10.17: curl -X POST http://localhost:9090/-/reload to reload config
+      # it will be safe to mount ./prometheus folder in recent prometheus image  
+      - ./prometheus:/etc/prometheus
     restart: always
     command:
       - "-config.file=/etc/prometheus/prometheus.yml"
@@ -106,6 +107,22 @@ services:
     command:
       - '-config.file=/etc/alertmanager/config.yml'
       - '-storage.path=/alertmanager'
+    labels:
+      container_group: monitoring
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
+
+#########################################################
+  blackboxprober:
+    image: prom/blackbox-exporter:v0.10.0
+    volumes:
+      - ./blackboxprober:/etc/blackbox_exporter
+    ports:
+      - 9115:9115
+    restart: always
     labels:
       container_group: monitoring
     logging:
