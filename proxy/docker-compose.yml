@@ -8,6 +8,7 @@ services:
 ########################################################
 
   nginx-proxy:
+    container_name: nginx-proxy
     image: nginx
     restart: always
     ports:
@@ -17,6 +18,7 @@ services:
       - /etc/nginx/conf.d
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
+      - ./nginx/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf
       - ./dockergen/default.vhost:/etc/nginx/vhost.d/default # fixing https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/138
       - ../storage/nginx-proxy/certs:/etc/nginx/certs:ro
       - ../storage/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro
@@ -31,6 +33,7 @@ services:
 #########################################################
 
   nginx-gen:
+    container_name: nginx-gen
     image: jwilder/docker-gen
     restart: always
     volumes_from:
@@ -52,6 +55,7 @@ services:
 #########################################################
 
   nginx-letsencrypt:
+    container_name: nginx-letsencrypt
     image: jrcs/letsencrypt-nginx-proxy-companion
     restart: always
     volumes_from:
