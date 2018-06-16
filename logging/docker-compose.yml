@@ -9,11 +9,12 @@ services:
 
   # Runs on your node(s) and forwards all logs to Logstash.
   master-filebeat:
-    image: prima/filebeat:5.3.0
+    image: docker.elastic.co/beats/filebeat:${ELK_TAG}
     volumes:
-      - ./filebeat/filebeat.yml:/filebeat.yml
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - /var/log:/host-logs
     restart: always
+    user: root
     labels:
       container_group: logging
     logging:
@@ -26,10 +27,10 @@ services:
 
   # Aggregates logs and forwards them to Elasticsearch.
   logstash:
-    image: logstash:5.5.0
+    image: docker.elastic.co/logstash/logstash-oss:${ELK_TAG}
     expose:
-      - 5044
       - 12201/udp
+      - 5044
     volumes:
       - ./logstash/config:/config
       - ./logstash/patterns:/opt/logstash/extra_patterns
@@ -50,7 +51,7 @@ services:
 
   # Logstash configs can be a hassle. Run 'docker-compose run --rm validate-logstash-config' in order to quickly check your logstash config.
   validate-logstash-config:
-    image: logstash:5.5.0
+    image: docker.elastic.co/logstash/logstash-oss:${ELK_TAG}
     volumes:
       - ./logstash/config:/config
     command: logstash -t -f /config
@@ -59,7 +60,7 @@ services:
 
   # Storage and search backend. Gets all logs from Logstash and is the backend that Kibana runs on.
   elasticsearch:
-    image: elasticsearch:5.5.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:${ELK_TAG}
     expose:
       - 9200
     volumes:
@@ -101,7 +102,7 @@ services:
 
   # Pretty frontend to explore and check out all your logs.
   kibana:
-    image: kibana:5.5.0
+    image: docker.elastic.co/kibana/kibana-oss:${ELK_TAG}
     expose:
       - 5601
     volumes:
