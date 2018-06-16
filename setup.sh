@@ -13,7 +13,7 @@ elif [ $# -eq 1 ]; then
     echo "############################### This means |NO| SSL/HTTPS, |NO| (basic) authentication but |YES| port forwading from the containers to the host machine. Only use this, when you're running this locally, on a virtual machine or in similarly safe conditions."
     echo "############################### This excludes all machines that are directly accesible from the internet."
     echo "############################### Hit enter to continue or Ctrl-C to abort..."
-    read _
+    read -r _
     echo "############################### Commencing!"
     echo "------------------------------------------------------------"
 
@@ -66,7 +66,7 @@ elif [ $# -eq 3 ]; then
     echo "############################### This means |YES| SSL/HTTPS, |YES| (basic) authentication but |NO| port forwading from the containers to the host machine. This mode is for running the suite out in the open, but won't work on machines that are not reachable directly via the internet."
     echo "############################### Also make sure you already set up DNS entries for grafana.${DOMAIN}, kibana.${DOMAIN}, prometheus.${DOMAIN} and alertmanager.${DOMAIN}."
     echo  "############################### If you haven't done that, do it first. Hit enter to continue or Ctrl-C to abort..."
-    read _
+    read -r _
     echo "############################### Commencing!"
     echo "------------------------------------------------------------"
 
