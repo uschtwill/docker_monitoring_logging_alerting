@@ -8,7 +8,7 @@ services:
 ########################################################
 
   nginx-proxy:
-    image: nginx
+    image: nginx:1.15.0
     restart: always
     ports:
       - 80:80
@@ -33,7 +33,7 @@ services:
 #########################################################
 
   nginx-gen:
-    image: jwilder/docker-gen
+    image: jwilder/docker-gen:0.7.3
     restart: always
     volumes_from:
       - nginx-proxy
@@ -55,7 +55,7 @@ services:
 #########################################################
 
   nginx-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion:v1.8.1
     restart: always
     volumes_from:
       - nginx-proxy
