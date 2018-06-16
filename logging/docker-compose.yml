@@ -105,16 +105,16 @@ services:
     image: docker.elastic.co/kibana/kibana-oss:${ELK_TAG}
     expose:
       - 5601
-  #  volumes:
-  #    - ./kibana/config/:/opt/kibana/config/
+    volumes:
+      - ./kibana/config/:/opt/kibana/config/
     restart: always
     labels:
       container_group: logging
-#    logging:
-#      driver: gelf
-#      options:
-#        gelf-address: udp://172.16.0.38:12201
-#        labels: container_group
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
     environment:
       - NODE_OPTIONS=--max-old-space-size=200 # fixes memory leak (https://github.com/elastic/kibana/issues/5170)
 
