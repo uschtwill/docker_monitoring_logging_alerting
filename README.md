@@ -1,3 +1,6 @@
+
+### +++ 2018/06/16 - Updated to ELK 6.3.0 +++
+
 #### Please let me know, if something is broken, so I can fix it!
 
 If you have any feedback regarding this monitoring/logging/alerting suite, any ideas for improvement, fixes, questions or comments, please feel free to contact me or do a PR!
@@ -30,7 +33,17 @@ The Grafana dashboard (a bit slimmed down) can also be found on grafana.net: [ht
 
 ### How to set it up?
 
-This repository comes with storage directories for Kibana and Grafana that contain the configuration for the data sources and dashboards. These directories will be mounted into the two containers as volumes. This is for your convenience and eliminates some manual setup steps.
+This repository comes with a storage directoriy for Grafana that contains the configuration for the data sources and the dashboard. This directoriy will be mounted into the containers as volumes. This is for your convenience and eliminates some manual setup steps.
+
++++
+
+Note: With the update to **ELK 6.3.0** the indices from the initial commits of the repository were causing errors. I thus removed them, so unfortunately there are no more convenience dashboards for Kibana anymore.
+
+This also means, that you will have to set up the indices yourself in the beginning. But that will be an easy excercise, the new Kibana does a good job in assisting with that.
+
+Also, give the whole stack a bit of time to start up. I noticed, that it takes up to 3 minutes for the first logs to arrive and for Kibana to suggest index patterns.
+
++++
 
 1. `git clone` this repository: `git clone https://github.com/uschtwill/docker_monitoring_logging_alerting.git`
 2. `cd` into the folder: `cd docker_monitoring_logging_alerting`
