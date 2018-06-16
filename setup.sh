@@ -122,8 +122,9 @@ elif [ $# -eq 3 ]; then
     echo "------------------------------------------------------------"
     echo "############################### Tailing the logs of the nginx-letsencrypt container through the creation of the Diffie-Hellman group and the initial setup of your SSL certificates..."
     echo "------------------------------------------------------------"
+    sleep 2
     echo "xxxxxxxxxxxx Start of logs, please be patient. Presumably you can make some noise on a different shell to help create some entropy during the creation of the DH parameters..."
-    sh -c 'docker logs -f proxy_nginx-letsencrypt_1 | { sed "/Reloading nginx proxy.../ q" && kill $$ ;}'
+    sh -c 'docker logs -f proxy_nginx-letsencrypt_1 | { sed "/Reloading nginx/ q" && kill $$ ;}'
     echo "xxxxxxxxxxxx End of logs."
 
     echo "------------------------------------------------------------"
