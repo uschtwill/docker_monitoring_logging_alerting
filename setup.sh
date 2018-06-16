@@ -1,6 +1,8 @@
 #!/bin/bash
 
 chown root:root logging/filebeat/filebeat.yml
+
+export ELK_TAG="6.3.0"
 ERROR_MSG="Please chose one of the two modes: \\n a) Unsecure: sh setup.sh unsecure \\n b) Secure: sh setup.sh secure \$DOMAIN \$VERY_STRONG_PASSWORD"
 
 if [ $# -eq 0 ]; then
