@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export DOCKER_COMPOSE_VERSION="1.21.2"
+
 echo "------------------------------------------------------------"
 echo "############################### Installing and setting prerequisites for setting up the suite..."
 echo "------------------------------------------------------------"
@@ -16,7 +18,7 @@ curl -sSL https://get.docker.com/ | sh
 echo "------------------------------------------------------------"
 echo "############################### Downloading docker-compose..."
 echo "------------------------------------------------------------"
-curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-"$(uname -s)"-"$(uname -m)" > /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/"$DOCKER_COMPOSE_VERSION"/docker-compose-"$(uname -s)"-"$(uname -m)" > /usr/local/bin/docker-compose
 
 echo "------------------------------------------------------------"
 echo "############################### Making docker-compose executable..."
