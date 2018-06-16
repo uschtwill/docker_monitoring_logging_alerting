@@ -63,8 +63,6 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:${ELK_TAG}
     expose:
       - 9200
-    volumes:
-      - ../storage/elasticsearch:/usr/share/elasticsearch/data
     restart: always
     command: elasticsearch -Etransport.host=127.0.0.1
     labels:
