@@ -17,6 +17,7 @@ services:
       - /etc/nginx/conf.d
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
+      - ./nginx/conf.d/proxy.conf:/etc/nginx/conf.d/proxy.conf
       - ./dockergen/default.vhost:/etc/nginx/vhost.d/default # fixing https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/138
       - ../storage/nginx-proxy/certs:/etc/nginx/certs:ro
       - ../storage/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro
