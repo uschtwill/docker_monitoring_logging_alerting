@@ -23,6 +23,7 @@ services:
       - ../storage/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro
     labels:
       container_group: proxy
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: ""
     # logging:
     #   driver: gelf
     #   options:
@@ -44,6 +45,7 @@ services:
     command: -notify-sighup nginx-proxy -watch /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     labels:
       container_group: proxy
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen: ""
     # logging:
     #   driver: gelf
     #   options:
