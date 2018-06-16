@@ -103,8 +103,6 @@ services:
     image: docker.elastic.co/kibana/kibana-oss:${ELK_TAG}
     expose:
       - 5601
-    volumes:
-      - ./kibana/config/:/opt/kibana/config/
     restart: always
     labels:
       container_group: logging
