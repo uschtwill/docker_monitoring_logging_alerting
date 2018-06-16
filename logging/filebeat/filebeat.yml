@@ -121,10 +121,10 @@ filebeat.modules:
     #prospector:
 
 #-------------------------------- Kafka Module -------------------------------
-- module: kafka
+#- module: kafka
   # All logs
-  log:
-    enabled: true
+  #log:
+    #enabled: true
 
     # Set custom paths for Kafka. If left empty,
     # Filebeat will look under /opt.
