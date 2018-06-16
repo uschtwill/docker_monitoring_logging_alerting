@@ -24,11 +24,11 @@ services:
     labels:
       container_group: proxy
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: ""
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: udp://172.16.0.38:12201
-    #     labels: container_group
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
 
 #########################################################
 
@@ -46,11 +46,11 @@ services:
     labels:
       container_group: proxy
       com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen: ""
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: udp://172.16.0.38:12201
-    #     labels: container_group
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
 
 #########################################################
 
@@ -64,15 +64,14 @@ services:
       - ../storage/nginx-proxy/certs:/etc/nginx/certs:rw
     environment:
       - NGINX_DOCKER_GEN_CONTAINER="nginx-gen"
+      - DEBUG=false
     labels:
       container_group: proxy
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: udp://172.16.0.38:12201
-    #     labels: container_group
-    environment:
-      - DEBUG=false
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://172.16.0.38:12201
+        labels: container_group
 
 #########################################################
 ####                   Networking                    ####
