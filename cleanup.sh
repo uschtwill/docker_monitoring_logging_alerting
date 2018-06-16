@@ -3,7 +3,7 @@
 ERROR_MSG="Please choose the mode you ran the suite in: \\n a) Unsecure: sh cleanup.sh unsecure \\n b) Secure: sh cleanup.sh secure"
 
 if [ $# -eq 0 ]; then
-  echo $ERROR_MSG
+  echo "$ERROR_MSG"
 
 elif [ $# -eq 1 ]; then
   if [ "$1" = "unsecure" ]; then
@@ -36,7 +36,7 @@ elif [ $# -eq 1 ]; then
     docker-compose -f proxy/docker-compose.yml down -v
 
   else
-    echo $ERROR_MSG
+    echo "$ERROR_MSG"
     exit
   fi
 
@@ -65,5 +65,5 @@ elif [ $# -eq 1 ]; then
   echo "------------------------------------------------------------"
 
 else
-  echo $ERROR_MSG
+  echo "$ERROR_MSG"
 fi

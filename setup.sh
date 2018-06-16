@@ -3,7 +3,7 @@
 ERROR_MSG="Please chose one of the two modes: \\n a) Unsecure: sh setup.sh unsecure \\n b) Secure: sh setup.sh secure \$DOMAIN \$VERY_STRONG_PASSWORD"
 
 if [ $# -eq 0 ]; then
-  echo $ERROR_MSG
+  echo "$ERROR_MSG"
 
 elif [ $# -eq 1 ]; then
   if [ "$1" = "unsecure" ]; then
@@ -52,7 +52,7 @@ elif [ $# -eq 1 ]; then
     echo "------------------------------------------------------------"
 
    else
-    echo $ERROR_MSG
+    echo "$ERROR_MSG"
   fi
 
 elif [ $# -eq 3 ]; then
@@ -76,9 +76,9 @@ elif [ $# -eq 3 ]; then
     echo "############################### Setting passwords for basic auth..."
     echo "------------------------------------------------------------"
     mkdir -p storage/nginx-proxy/htpasswd
-    htpasswd -bc storage/nginx-proxy/htpasswd/kibana.$DOMAIN admin $PASSWORD
-    htpasswd -bc storage/nginx-proxy/htpasswd/prometheus.$DOMAIN admin $PASSWORD
-    htpasswd -bc storage/nginx-proxy/htpasswd/alertmanager.$DOMAIN admin $PASSWORD
+    htpasswd -bc storage/nginx-proxy/htpasswd/kibana."$DOMAIN" admin "$PASSWORD"
+    htpasswd -bc storage/nginx-proxy/htpasswd/prometheus."$DOMAIN" admin "$PASSWORD"
+    htpasswd -bc storage/nginx-proxy/htpasswd/alertmanager."$DOMAIN" admin "$PASSWORD"
 
     echo "------------------------------------------------------------"
     echo "############################### Creating separate docker network..."
@@ -138,9 +138,9 @@ elif [ $# -eq 3 ]; then
     echo "------------------------------------------------------------"
 
   else
-    echo $ERROR_MSG
+    echo "$ERROR_MSG"
   fi
 
 else
-  echo $ERROR_MSG
+  echo "$ERROR_MSG"
 fi
