@@ -64,7 +64,7 @@ services:
     expose:
       - 9200
     restart: always
-    command: elasticsearch -Etransport.host=127.0.0.1
+    command: elasticsearch -Etransport.host=127.0.0.1 -Ebootstrap.memory_lock=false
     labels:
       container_group: logging
     logging:
