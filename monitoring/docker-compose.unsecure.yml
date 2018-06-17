@@ -13,14 +13,14 @@ services:
       file: docker-compose.yml
       service: master-cadvisor
     ports:
-      - 8080:8080
+      - ${CADVISOR_HOST_PORT:-8080}::8080
 
   prometheus:
     extends:
       file: docker-compose.yml
       service: prometheus
     ports:
-      - 9090:9090
+      - ${PROMETHEUS_HOST_PORT:-9090}:9090
 
   blackboxprober:
     extends:
@@ -34,7 +34,7 @@ services:
       file: docker-compose.yml
       service: grafana
     ports:
-      - 3000:3000
+      - ${GRAFANA_HOST_PORT:-3000}:3000
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
@@ -43,7 +43,7 @@ services:
       file: docker-compose.yml
       service: alertmanager
     ports:
-      - 9093:9093
+      - ${ALERTMANAGER_HOST_PORT:-9093}:9093
 
 networks:
   default:
