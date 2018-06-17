@@ -1,5 +1,5 @@
 
-### +++ 2018/06/16 - Updated to ELK 6.3.0 +++
+### +++ 2018/06/16 - Updated to ELK 6.3.0 and fixed a whole bunch of stuff... +++
 
 #### Please let me know, if something is broken, so I can fix it!
 
