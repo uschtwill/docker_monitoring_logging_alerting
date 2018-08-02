@@ -118,7 +118,8 @@ services:
 
   # Tool to run queries against your Elasticsearch and when alert when finding certain logs.
   elastalert:
-    build: elastalert/
+#    build: elastalert/
+    image: jertel/elastalert-docker:0.1.33
     restart: always
     volumes:
       - ./elastalert/log:/opt/log
